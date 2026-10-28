@@ -5,7 +5,7 @@ import { sampleMorph } from './morph.js';
 import { Cartoon, SS_COLORS } from './cartoon.js';
 
 const PROFILE = [[0.32, 0.32], [1.15, 0.22], [1.05, 0.26]];
-const CLASH = new THREE.Color('#ff5a5f');
+const CLASH = new THREE.Color('#d92d20');
 
 export class Viewer {
   constructor(canvas) {
@@ -15,9 +15,10 @@ export class Viewer {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(30, 1, 1, 1000);
-    this.scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x2a2018, 1.35));
-    const key = new THREE.DirectionalLight(0xffffff, 1.9); key.position.set(40, 60, 80); this.scene.add(key);
-    const rim = new THREE.DirectionalLight(0x9fc7ff, 0.8); rim.position.set(-60, -20, -50); this.scene.add(rim);
+    // soft, even lighting for a light page background
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x8a929c, 1.9));
+    const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(40, 60, 80); this.scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.6); fill.position.set(-60, -20, -50); this.scene.add(fill);
     this.pivot = new THREE.Group(); this.scene.add(this.pivot);
     this.inner = new THREE.Group(); this.pivot.add(this.inner);
     this.rotY = 0.6; this.rotX = 0.15; this.velY = 0; this.auto = 0.12; this.dragging = false;

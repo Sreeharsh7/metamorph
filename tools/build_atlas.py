@@ -9,7 +9,7 @@ The pair list and fold-switching regions come from Chakravarty & Porter (2022),
 
 Run from the project root:  python3 tools/build_atlas.py
 """
-import csv, json, os, sys, time, urllib.request
+import csv, json, math, os, sys, time, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -182,6 +182,110 @@ def build(row):
     }
 
 
+# ---------- dataset export ----------
+def assign_ss(P, breaks):
+    """Cα-only secondary structure, same rules as js/ss.js: 0 coil, 1 helix, 2 strand."""
+    n = len(P)
+    brk = set(breaks)
+    d = lambda i, j: math.dist(P[i], P[j])
+    ok = lambda i, k: all(j < n - 1 and j not in brk for j in range(i, i + k))
+    ss = [0] * n
+    hw, sw = [0] * n, [0] * n
+    for i in range(n - 4):
+        if not ok(i, 4):
+            continue
+        d2, d3, d4 = d(i, i + 2), d(i, i + 3), d(i, i + 4)
+        if abs(d2 - 5.45) < 0.65 and abs(d3 - 5.25) < 0.75 and abs(d4 - 6.3) < 0.9:
+            hw[i] = 1
+        if abs(d2 - 6.6) < 0.75 and d3 > 8.7 and d4 > 10.8:
+            sw[i] = 1
+    for i in range(n - 5):
+        if hw[i] and hw[i + 1]:
+            for j in range(i, i + 6):
+                ss[j] = 1
+    for i in range(n - 3):
+        if not sw[i] or ss[i] == 1:
+            continue
+        if any(abs(i + 1 - j) > 3 and d(i + 1, j) < 5.3 for j in range(n)):
+            for j in range(i, i + 3):
+                if not ss[j]:
+                    ss[j] = 2
+    i = 0
+    while i < n:
+        j = i
+        while j < n and ss[j] == ss[i]:
+            j += 1
+        if (ss[i] == 1 and j - i < 4) or (ss[i] == 2 and j - i < 3):
+            for k in range(i, j):
+                ss[k] = 0
+        i = j
+    return ss
+
+
+def classify(ss, lo, hi):
+    """Same rule as js/atlas.js."""
+    L = hi - lo + 1
+    h = sum(1 for i in range(lo, hi + 1) if ss[i] == 1)
+    e = sum(1 for i in range(lo, hi + 1) if ss[i] == 2)
+    if h / L >= 0.3 and h >= e:
+        return 'alpha'
+    if e / L >= 0.25:
+        return 'beta'
+    if h / L >= 0.2:
+        return 'alpha'
+    return 'coil'
+
+
+def kabsch_rmsd(A, B):
+    import numpy as np
+    A = np.asarray(A, float); B = np.asarray(B, float)
+    A = A - A.mean(0); B = B - B.mean(0)
+    U, S, Vt = np.linalg.svd(B.T @ A)
+    D = np.diag([1, 1, np.sign(np.linalg.det(U @ Vt))])
+    R = U @ D @ Vt
+    return float(np.sqrt(((B @ R - A) ** 2).sum(1).mean()))
+
+
+def export_dataset(out):
+    rows = []
+    for e in out:
+        A = [e['A'][k:k + 3] for k in range(0, len(e['A']), 3)]
+        B = [e['B'][k:k + 3] for k in range(0, len(e['B']), 3)]
+        lo, hi = e['fsr'] or (0, len(A) - 1)
+        sa, sb = assign_ss(A, e['breaks']), assign_ss(B, e['breaks'])
+        ca, cb = classify(sa, lo, hi), classify(sb, lo, hi)
+        ch = lambda ss: ''.join('-HE'[x] for x in ss[lo:hi + 1])
+        rows.append({
+            'pair_id': e['id'], 'protein': e['name'], 'organism': e['organism'],
+            'fold_a_pdb': e['a']['pdb'], 'fold_a_chain': e['a']['chain'], 'fold_a_method': e['a']['method'],
+            'fold_a_resolution': e['a']['resolution'], 'fold_a_year': e['a']['year'],
+            'fold_b_pdb': e['b']['pdb'], 'fold_b_chain': e['b']['chain'], 'fold_b_method': e['b']['method'],
+            'fold_b_resolution': e['b']['resolution'], 'fold_b_year': e['b']['year'],
+            'aligned_residues': len(A), 'sequence_identity': e['identity'],
+            'switch_type': f'{ca} to {cb}' if ca != cb else f'{ca} rearranged',
+            'region_start_a': e['numA'][lo], 'region_end_a': e['numA'][hi],
+            'region_start_b': e['numB'][lo], 'region_end_b': e['numB'][hi],
+            'region_length': hi - lo + 1, 'region_sequence': e['seq'][lo:hi + 1],
+            'region_ss_a': ch(sa), 'region_ss_b': ch(sb),
+            'ca_rmsd_global': round(kabsch_rmsd(A, B), 2),
+        })
+    rows.sort(key=lambda r: (r['protein'] or '').lower())
+    with open(os.path.join(ROOT, 'data', 'fold_switch_atlas.csv'), 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader(); w.writerows(rows)
+    meta = {
+        'name': 'Fold-switching protein atlas',
+        'description': 'Experimentally determined pairs of protein structures in which one sequence (or a close homologue) adopts two different folds.',
+        'source': 'Pair list and fold-switching regions: Chakravarty D, Porter LL (2022) AlphaFold2 fails to predict protein fold switching. Protein Sci 31:e4353. Structures and annotations: RCSB Protein Data Bank.',
+        'secondary_structure': 'Assigned from C-alpha geometry (P-SEA-style), not DSSP. H helix, E strand, - other.',
+        'rmsd': 'C-alpha RMSD after a single global Kabsch superposition of all aligned residues.',
+        'pairs': rows,
+    }
+    with open(os.path.join(ROOT, 'data', 'fold_switch_atlas.json'), 'w') as f:
+        json.dump(meta, f, indent=1)
+    print(f'{len(rows)} rows -> data/fold_switch_atlas.csv, data/fold_switch_atlas.json')
+
+
 def main():
     rows = list(csv.DictReader(open(os.path.join(ROOT, 'tools', 'fold_switch_pairs.csv'))))
     out, failed = [None] * len(rows), []
@@ -201,6 +305,7 @@ def main():
                 '// Chakravarty & Porter (2022) Protein Sci 31:e4353; coordinates from the RCSB PDB.\n')
         f.write('export const ATLAS = ' + json.dumps(out, separators=(',', ':')) + ';\n')
     print(f'{len(out)} pairs -> {path} ({os.path.getsize(path) // 1024} KB)')
+    export_dataset(out)
 
 
 if __name__ == '__main__':

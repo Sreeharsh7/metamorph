@@ -10,7 +10,7 @@ export { assignSS };
 // ---------- ribbon profile ----------
 // half-width / half-thickness in Å for coil, helix, strand
 const PROFILE = [[0.32, 0.32], [1.15, 0.22], [1.05, 0.26]];
-export const SS_COLORS = [new THREE.Color('#8f97a8'), new THREE.Color('#5cb8b2'), new THREE.Color('#e8b46a')];
+export const SS_COLORS = [new THREE.Color('#9aa3ad'), new THREE.Color('#1f8a8a'), new THREE.Color('#d4890a')];
 
 export class Cartoon {
   constructor(n, opts = {}) {
@@ -36,7 +36,7 @@ export class Cartoon {
     this.geo.setAttribute('normal', new THREE.BufferAttribute(this.nor, 3).setUsage(THREE.DynamicDrawUsage));
     this.geo.setAttribute('color', new THREE.BufferAttribute(this.col, 3).setUsage(THREE.DynamicDrawUsage));
     this.geo.setIndex(idx);
-    this.material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0.05 });
+    this.material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62, metalness: 0.0 });
     this.mesh = new THREE.Mesh(this.geo, this.material);
     this.mesh.frustumCulled = false;
   }

@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Metamorph</title>
+<title>Fold Switching Guide</title>
 <meta name="description" content="One sequence, two folds. An interactive guide to fold-switching proteins, drawn from real PDB structures.">
-<meta name="theme-color" content="#0c0f15">
+<meta name="theme-color" content="#ffffff">
 <meta property="og:title" content="Metamorph: one sequence, two folds">
 <meta property="og:description" content="An interactive guide to fold-switching proteins: RfaH, KaiB, lymphotactin and Mad2, morphing between their real structures.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0f15'/%3E%3Cpath d='M10 38c5-16 10-16 15 0s10 16 15 0' fill='none' stroke='%235cb8b2' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M42 20h12l-6 8z' fill='%23e8b46a'/%3E%3Crect x='44' y='28' width='8' height='18' rx='2' fill='%23e8b46a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2315181c'/%3E%3Cpath d='M7 19c2.5-7 5-7 7.5 0s5 7 7.5 0' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/style.css">
 <script type="importmap">
 { "imports": { "three": "./vendor/three/build/three.module.min.js" } }
 </script>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="#top">Metamorph</a>
-  <nav class="toc" aria-label="Sections">
-    <a href="#exception">The switch</a>
-    <a href="#rfah">Four proteins</a>
-    <a href="#drawing">The morph</a>
-    <a href="#yours">Your own</a>
-    <a href="atlas.html">Atlas</a>
-  </nav>
+<header class="site-header">
+  <div class="header-row header-full">
+    <a class="brand" href="atlas.html"><span class="mark" aria-hidden="true"></span>Metamorph</a>
+    <nav class="nav" aria-label="Main">
+      <a href="atlas.html">Atlas</a>
+      <a href="index.html" aria-current="page">Guide</a>
+    </nav>
+  </div>
 </header>
 
 <div class="layout">
@@ -38,17 +38,17 @@
     <div class="stage-caption">
       <div class="cap-name" id="capName">RfaH C-terminal domain</div>
       <div class="cap-state"><span id="capState">α-helical hairpin</span> <span class="cap-pdb" id="capPdb">PDB 2OUG</span></div>
-      <div class="legend"><i class="lg helix"></i>helix <i class="lg strand"></i>strand <i class="lg coil"></i>loop</div>
+      <div class="legend"><i class="lg helix"></i>Helix <i class="lg strand"></i>Strand <i class="lg coil"></i>Other</div>
     </div>
-    <div class="stage-hint">drag to rotate</div>
+    <div class="stage-hint">Drag to rotate</div>
   </aside>
 
   <main class="essay" id="top">
     <section class="step hero" data-step="hero">
-      <p class="kicker">An interactive guide to fold switching</p>
-      <h1>One sequence,<br><em>two folds.</em></h1>
+      <p class="kicker">Guide to fold-switching proteins</p>
+      <h1>One sequence, two folds</h1>
       <p class="lede">Most proteins fold into a single shape. A few have two, and switch between them when the cell asks. Scroll to watch real structures change.</p>
-      <p class="scroll-cue" aria-hidden="true">scroll ↓</p>
+      <p class="scroll-cue" aria-hidden="true">Scroll to continue</p>
     </section>
 
     <section class="step" data-step="rule">
@@ -148,10 +148,10 @@
       <p>Fold switchers sit right on the fault line of modern structure prediction. Tools like AlphaFold2 learn one structure per sequence, and for most fold switchers they predict only one of the two folds. Finding the proteins that switch, and predicting both of their shapes, is an open problem.</p>
       <p>That is the question behind my research on fold-switching proteins.</p>
       <div class="links">
-        <a class="btn primary" href="https://www.biorxiv.org/content/10.64898/2026.08.16.745091v1" target="_blank" rel="noopener">Read the preprint ↗</a>
-        <a class="btn" href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io ↗</a>
+        <a class="btn primary" href="https://www.biorxiv.org/content/10.64898/2026.08.16.745091v1" target="_blank" rel="noopener">Read the preprint</a>
+        <a class="btn" href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a>
       </div>
-      <p>Want more than four? The <a href="atlas.html">Fold-Switch Atlas</a> animates all 92 experimentally known pairs.</p>
+      <p>Want more than four? The <a href="atlas.html">fold-switching protein atlas</a> covers all 92 experimentally known pairs, with downloadable data.</p>
       <details class="refs">
         <summary>Further reading</summary>
         <ul>
