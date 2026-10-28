@@ -1,5 +1,7 @@
 # Metamorph
 
+**Live site:** [Atlas](https://sreeharsh7.github.io/metamorph/atlas.html) · [Guide](https://sreeharsh7.github.io/metamorph/)
+
 Two things about fold-switching proteins:
 
 - **Atlas** (`atlas.html`): a public, downloadable dataset of 92 experimentally determined fold-switching structure pairs with an interactive viewer.
