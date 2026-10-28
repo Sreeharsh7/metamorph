@@ -48,17 +48,6 @@ function summarise(e) {
 }
 ATLAS.forEach(summarise);
 
-// ---------- header stats ----------
-{
-  const pdbs = new Set(ATLAS.flatMap(e => [e.a.pdb, e.b.pdb]));
-  const orgs = new Set(ATLAS.map(e => e.org).filter(Boolean));
-  const lens = ATLAS.map(e => e.seq.length).sort((a, b) => a - b);
-  $('#sPairs').textContent = ATLAS.length;
-  $('#sEntries').textContent = pdbs.size;
-  $('#sOrgs').textContent = orgs.size;
-  $('#sLen').textContent = `${lens[lens.length >> 1]} aa`;
-}
-
 // ---------- table ----------
 const entries = [...ATLAS];
 let typeFilter = 'all', query = '', current = null;
@@ -163,17 +152,12 @@ const DURATION = 3.6;
 
 function setEmph() {
   const p = viewer.protein; if (!p || !current) return;
-  const map = { region: '#emRegion', motion: '#emMove', none: '#emNone' };
-  for (const k in map) $(map[k]).classList.toggle('on', k === emphMode);
   if (emphMode === 'none') { viewer.emph = null; viewer.highlightMoving = false; return; }
   if (emphMode === 'motion' || !current.fsr) { viewer.emph = null; viewer.highlightMoving = true; return; }
   const n = p.morph.n, w = new Float32Array(n), [lo, hi] = current.fsr;
   for (let i = 0; i < n; i++) { const d = i < lo ? lo - i : i > hi ? i - hi : 0; w[i] = Math.max(0, 1 - d / 4); }
   viewer.emph = w; viewer.highlightMoving = false;
 }
-$('#emRegion').addEventListener('click', () => { emphMode = 'region'; setEmph(); });
-$('#emMove').addEventListener('click', () => { emphMode = 'motion'; setEmph(); });
-$('#emNone').addEventListener('click', () => { emphMode = 'none'; setEmph(); });
 
 const PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="3" height="10"/><rect x="9" y="3" width="3" height="10"/></svg>';
 const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>';
@@ -343,84 +327,6 @@ function tick(now) {
   viewer.frame(dt);
   requestAnimationFrame(tick);
 }
-
-// ---------- compare any two PDB entries ----------
-const AA = { ALA: 'A', ARG: 'R', ASN: 'N', ASP: 'D', CYS: 'C', GLN: 'Q', GLU: 'E', GLY: 'G', HIS: 'H', ILE: 'I', LEU: 'L', LYS: 'K', MET: 'M', PHE: 'F', PRO: 'P', SER: 'S', THR: 'T', TRP: 'W', TYR: 'Y', VAL: 'V', MSE: 'M', SEC: 'U' };
-async function fetchChain(pdb, chain) {
-  const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 15000);
-  try {
-    const url = `https://models.rcsb.org/v1/${pdb.toLowerCase()}/atoms?label_atom_id=CA&auth_asym_id=${encodeURIComponent(chain)}&model_nums=1&encoding=cif`;
-    const res = await fetch(url, { signal: ctrl.signal });
-    if (!res.ok) throw new Error(`${pdb} chain ${chain} was not found (HTTP ${res.status}).`);
-    const cols = [], out = [], seen = new Set();
-    for (const line of (await res.text()).split('\n')) {
-      if (line.startsWith('_atom_site.')) { cols.push(line.slice(11).trim()); continue; }
-      if (!cols.length || !(line.startsWith('ATOM') || line.startsWith('HETATM'))) continue;
-      const f = line.trim().split(/\s+/), c = {}; cols.forEach((k, i) => { c[k] = f[i]; });
-      if (c.label_atom_id !== 'CA' || c.auth_asym_id !== chain || !['.', '?', 'A'].includes(c.label_alt_id ?? '.')) continue;
-      const key = c.auth_seq_id + (c.pdbx_PDB_ins_code || '');
-      if (seen.has(key) || !AA[c.label_comp_id]) continue;
-      seen.add(key);
-      out.push({ n: +c.auth_seq_id, aa: AA[c.label_comp_id], x: +c.Cartn_x, y: +c.Cartn_y, z: +c.Cartn_z });
-    }
-    if (out.length < 12) throw new Error(`${pdb} chain ${chain} has only ${out.length} residues with Cα atoms.`);
-    return out;
-  } finally { clearTimeout(timer); }
-}
-// global alignment with free end gaps
-function align(s, t) {
-  const n = s.length, m = t.length, W = m + 1;
-  const H = new Float32Array((n + 1) * W), P = new Uint8Array((n + 1) * W);
-  for (let i = 1; i <= n; i++) P[i * W] = 1;
-  for (let j = 1; j <= m; j++) P[j] = 2;
-  for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++) {
-    const d = H[(i - 1) * W + j - 1] + (s[i - 1] === t[j - 1] ? 2 : -1);
-    const u = H[(i - 1) * W + j] + (j === m ? 0 : -3);
-    const l = H[i * W + j - 1] + (i === n ? 0 : -3);
-    if (d >= u && d >= l) { H[i * W + j] = d; P[i * W + j] = 0; }
-    else if (u >= l) { H[i * W + j] = u; P[i * W + j] = 1; }
-    else { H[i * W + j] = l; P[i * W + j] = 2; }
-  }
-  const pairs = []; let i = n, j = m;
-  while (i > 0 && j > 0) { const p = P[i * W + j]; if (p === 0) { pairs.push([i - 1, j - 1]); i--; j--; } else if (p === 1) i--; else j--; }
-  return pairs.reverse();
-}
-$('#compareForm').addEventListener('submit', async ev => {
-  ev.preventDefault();
-  const st = $('#cStatus'), go = $('#cGo');
-  const pa = $('#cA').value.trim().toUpperCase(), pb = $('#cB').value.trim().toUpperCase();
-  const ca = $('#cAc').value.trim() || 'A', cb = $('#cBc').value.trim() || 'A';
-  st.className = 'status';
-  if (![pa, pb].every(p => /^[0-9][A-Z0-9]{3}$/.test(p))) { st.className = 'status err'; st.textContent = 'A PDB ID has 4 characters and starts with a digit.'; return; }
-  go.disabled = true; st.textContent = 'Fetching coordinates from RCSB…';
-  try {
-    const [A, B] = await Promise.all([fetchChain(pa, ca), fetchChain(pb, cb)]);
-    let pairs = align(A.map(r => r.aa).join(''), B.map(r => r.aa).join(''));
-    if (pairs.length < 12) throw new Error('The two chains share too few aligned residues.');
-    if (pairs.length > 700) pairs = pairs.slice(0, 700);
-    const ident = pairs.filter(([i, j]) => A[i].aa === B[j].aa).length / pairs.length;
-    const gap = (R, i, j) => R[j].n - R[i].n !== 1 || Math.hypot(R[j].x - R[i].x, R[j].y - R[i].y, R[j].z - R[i].z) > 4.3;
-    const breaks = []; for (let k = 0; k < pairs.length - 1; k++) if (gap(A, pairs[k][0], pairs[k + 1][0]) || gap(B, pairs[k][1], pairs[k + 1][1])) breaks.push(k);
-    const e = {
-      id: `${pa}_${ca}-${pb}_${cb}`, custom: true, title: `${pa} chain ${ca} → ${pb} chain ${cb}`, org: '', identity: ident, fsr: null,
-      a: { pdb: pa, chain: ca }, b: { pdb: pb, chain: cb },
-      seq: pairs.map(([i]) => A[i].aa).join(''), numA: pairs.map(([i]) => A[i].n), numB: pairs.map(([, j]) => B[j].n), breaks,
-      A: pairs.flatMap(([i]) => [A[i].x, A[i].y, A[i].z]), B: pairs.flatMap(([, j]) => [B[j].x, B[j].y, B[j].z]),
-    };
-    summarise(e);
-    const existing = entries.findIndex(x => x.id === e.id);
-    if (existing >= 0) entries.splice(existing, 1);
-    entries.unshift(e);
-    cache.delete(e.id);
-    st.className = 'status ok';
-    st.textContent = `${pairs.length} aligned residues, ${Math.round(ident * 100)}% identical. Shown at the top of the table.`;
-    renderRows();
-    await select(e, true);
-  } catch (err) {
-    st.className = 'status err';
-    st.textContent = err.name === 'AbortError' ? 'RCSB did not respond in time. Please try again.' : err.message;
-  } finally { go.disabled = false; }
-});
 
 // ---------- citations ----------
 {

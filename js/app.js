@@ -2,7 +2,7 @@
 // viewer at the right protein, and drives each section's two-well widget.
 import { Viewer } from './viewer.js';
 import { Landscape } from './landscape.js';
-import { loadProtein, fetchCA, parseAnyCA, prepare } from './structures.js';
+import { loadProtein } from './structures.js';
 
 const $ = s => document.querySelector(s);
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -12,7 +12,6 @@ const INFO = {
   kaib: { name: 'KaiB', a: 'ground-state fold', b: 'fold-switched (thioredoxin-like)' },
   ltn: { name: 'Lymphotactin (XCL1)', a: 'Ltn10, chemokine fold', b: 'Ltn40, all-β fold' },
   mad2: { name: 'Mad2', a: 'open (O-Mad2)', b: 'closed (C-Mad2)' },
-  custom: { name: 'Your structures', a: 'state A', b: 'state B' },
 };
 
 const viewer = new Viewer($('#view'));
@@ -159,8 +158,7 @@ const SECTIONS = {
   mad2: { protein: 'mad2', seconds: 2.5, target: dt => (mad2Model(dt) > 0 ? 1 : 0), well: 'mad2' },
   drawing: { protein: 'ltn', seconds: 0.2, linear: true, clashes: true, target: () => $('#scrubDraw').value / 1000 },
   why: { protein: 'rfah', seconds: 3, target: pingPong },
-  yours: { protein: () => (proteins.custom ? 'custom' : 'kaib'), seconds: 0.2, target: () => (proteins.custom ? $('#scrubYours').value / 1000 : pingPong(0)) },
-  credits: { protein: () => (proteins.custom ? 'custom' : 'rfah'), seconds: 3, target: pingPong },
+  credits: { protein: 'rfah', seconds: 3, target: pingPong },
 };
 const val = (v, ...a) => (typeof v === 'function' ? v(...a) : v);
 
@@ -247,62 +245,6 @@ async function boot() {
     await new Promise(r => setTimeout(r, 30));
     try { proteins[id] = await loadProtein(id); } catch (e) { console.warn(id, e); }
   }
-  const src = ['rfah', 'kaib', 'ltn', 'mad2'].filter(k => proteins[k]).map(k => `${k === 'ltn' ? 'Lymphotactin' : INFO[k].name.split(' ')[0]}: ${proteins[k].source}`);
-  $('#sourceNote').textContent = `Coordinates loaded from — ${src.join(' · ')}`;
 }
-
-// ---------- your own structures ----------
-const MAX_RES = 700;
-async function readSide(idSel, chainSel, fileSel) {
-  const file = $(fileSel).files[0];
-  const chain = $(chainSel).value.trim();
-  if (file) {
-    const res = parseAnyCA(await file.text(), chain || null);
-    if (!res.length) throw new Error(`No Cα atoms found in ${file.name}${chain ? ` chain ${chain}` : ''}.`);
-    return { res, label: file.name.replace(/\.[^.]+$/, '') };
-  }
-  const id = $(idSel).value.trim().toUpperCase();
-  if (!/^[0-9][A-Z0-9]{3}$/.test(id)) throw new Error(`"${id}" is not a PDB ID (4 characters, starting with a digit).`);
-  const res = await fetchCA(id, chain || 'A', 12000);
-  if (!res.length) throw new Error(`${id} chain ${chain || 'A'} has no Cα atoms.`);
-  return { res, label: `${id}`, pdb: id };
-}
-
-$('#yoursForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const status = $('#yoursStatus'), go = $('#yoursGo');
-  status.className = 'status'; status.textContent = 'fetching…'; go.disabled = true;
-  try {
-    const [A, B] = await Promise.all([readSide('#aId', '#aChain', '#aFile'), readSide('#bId', '#bChain', '#bFile')]);
-    status.textContent = 'superposing and relaxing the path…';
-    await new Promise(r => setTimeout(r, 30));
-    const offset = parseInt($('#bOffset').value, 10) || 0;
-    const p = prepare(A.res.slice(0, MAX_RES), B.res.slice(0, MAX_RES), {}, { offset }, { id: 'custom', source: 'yours', pdbA: A.label, pdbB: B.label });
-    proteins.custom = p;
-    INFO.custom = { name: `${A.label} → ${B.label}`, a: 'state A', b: 'state B' };
-    if (shown === 'custom') shown = null;    // force the viewer to pick up the new pair
-    const sc = $('#scrubYours'); sc.disabled = false; sc.value = 0;
-    const trimmed = A.res.length > MAX_RES || B.res.length > MAX_RES ? `, trimmed to ${MAX_RES}` : '';
-    status.className = 'status ok';
-    status.textContent = `${p.nums.length} paired residues${trimmed}. Drag the slider.`;
-  } catch (err) {
-    status.className = 'status err';
-    status.textContent = err.name === 'AbortError' ? 'RCSB took too long to answer. Try again, or drop files instead.' : err.message;
-  } finally { go.disabled = false; }
-});
-
-// drop files anywhere on the form
-const form = $('#yoursForm');
-['dragenter', 'dragover'].forEach(t => form.addEventListener(t, e => { e.preventDefault(); document.body.classList.add('dragging'); }));
-['dragleave', 'drop'].forEach(t => form.addEventListener(t, () => document.body.classList.remove('dragging')));
-form.addEventListener('drop', e => {
-  e.preventDefault();
-  const files = [...e.dataTransfer.files].slice(0, 2);
-  const put = (sel, f) => { const dt = new DataTransfer(); dt.items.add(f); $(sel).files = dt.files; };
-  if (files[0]) put('#aFile', files[0]);
-  if (files[1]) put('#bFile', files[1]);
-  $('#yoursStatus').className = 'status';
-  $('#yoursStatus').textContent = `${files.length} file${files.length > 1 ? 's' : ''} ready. Press Morph.`;
-});
 
 boot();

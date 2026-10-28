@@ -2,11 +2,6 @@
 .intro { padding-top: 36px; padding-bottom: 28px; }
 .intro h1 { font-size: 30px; line-height: 1.2; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 10px; }
 .intro-text { max-width: 760px; color: var(--text-2); font-size: 16px; margin: 0 0 22px; }
-.stats { display: flex; gap: 0; margin: 0 0 22px; border: 1px solid var(--line); border-radius: var(--radius); width: max-content; max-width: 100%; }
-.stats div { padding: 10px 22px 10px 16px; border-left: 1px solid var(--line); }
-.stats div:first-child { border-left: 0; }
-.stats dt { font-size: 12px; color: var(--muted); }
-.stats dd { margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* workspace: table left, detail right */
@@ -106,12 +101,6 @@
 .fields td { padding: 7px 12px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--text-2); }
 .fields td:first-child { font-family: var(--mono); font-size: 12.5px; color: var(--text); white-space: nowrap; }
 
-.compare { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; align-self: start; }
-.field { display: flex; flex-direction: column; gap: 4px; }
-.field label { font-size: 12px; color: var(--muted); }
-.field input { width: 120px; text-transform: uppercase; font-family: var(--mono); }
-.field.narrow input { width: 64px; }
-.compare .status { flex-basis: 100%; margin: 2px 0 0; min-height: 1.4em; }
 
 .cite-block { align-self: start; }
 .refs { margin: 0 0 12px; padding-left: 20px; color: var(--text-2); font-size: 14px; }
@@ -127,11 +116,6 @@
   .intro { padding-top: 22px; }
   .intro h1 { font-size: 24px; }
   .intro-text { font-size: 15px; }
-  .stats { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
-  .stats div { border-left: 0; border-top: 1px solid var(--line); padding: 8px 12px; }
-  .stats div:nth-child(-n+2) { border-top: 0; }
-  .stats div:nth-child(even) { border-left: 1px solid var(--line); }
-  .stats dd { font-size: 18px; }
   .nav a[href^="#"] { display: none; }
   .c-b, .c-num { display: none; }
   .c-glyph { width: 50px; }

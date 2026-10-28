@@ -36,12 +36,6 @@
   <section class="intro wrap">
     <h1>Fold-switching protein atlas</h1>
     <p class="intro-text">A curated set of experimentally determined structure pairs in which one protein sequence adopts two different folds. Browse the pairs, view each switch as an interpolated Cα morph, and download the data for your own analysis.</p>
-    <dl class="stats">
-      <div><dt>Structure pairs</dt><dd id="sPairs">92</dd></div>
-      <div><dt>PDB entries</dt><dd id="sEntries">–</dd></div>
-      <div><dt>Organisms</dt><dd id="sOrgs">–</dd></div>
-      <div><dt>Median length</dt><dd id="sLen">–</dd></div>
-    </dl>
     <div class="actions">
       <a class="btn primary" href="data/fold_switch_atlas.csv" download>Download CSV</a>
       <a class="btn" href="data/fold_switch_atlas.json" download>Download JSON</a>
@@ -98,11 +92,6 @@
         <button class="icon-btn" id="play" aria-label="Pause"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="3" height="10"/><rect x="9" y="3" width="3" height="10"/></svg></button>
         <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Morph progress">
         <span class="pct" id="pct">0%</span>
-        <div class="seg" role="group" aria-label="Highlight">
-          <button class="on" id="emRegion" title="Fade residues outside the fold-switching region">Region</button>
-          <button id="emMove" title="Fade residues by how little they move">Motion</button>
-          <button id="emNone">None</button>
-        </div>
         <button class="btn small" id="exportPdb" title="Download the morph as a multi-model Cα PDB file">Export PDB</button>
       </div>
 
@@ -122,22 +111,6 @@
     </aside>
   </section>
 
-  <section class="section wrap" id="compare">
-    <div class="section-grid">
-      <div>
-        <h2>Compare two structures</h2>
-        <p>Morph any two PDB entries of the same protein. The chains are paired by sequence alignment and the path is computed in your browser.</p>
-      </div>
-      <form class="compare" id="compareForm">
-        <div class="field"><label for="cA">Fold A · PDB ID</label><input id="cA" value="2QKE" maxlength="4" autocomplete="off" spellcheck="false"></div>
-        <div class="field narrow"><label for="cAc">Chain</label><input id="cAc" value="B" maxlength="4" autocomplete="off"></div>
-        <div class="field"><label for="cB">Fold B · PDB ID</label><input id="cB" value="5JYT" maxlength="4" autocomplete="off" spellcheck="false"></div>
-        <div class="field narrow"><label for="cBc">Chain</label><input id="cBc" value="A" maxlength="4" autocomplete="off"></div>
-        <button class="btn primary" type="submit" id="cGo">Compare</button>
-        <p class="status" id="cStatus" aria-live="polite"></p>
-      </form>
-    </div>
-  </section>
 
   <section class="section wrap" id="dataset">
     <div class="section-grid">
@@ -201,7 +174,7 @@
 
 <footer class="site-footer">
   <div class="wrap footer-row">
-    <span>Metamorph · Sreeharsh K · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a></span>
+    <span>Metamorph · Sreeharsh K · <a href="https://www.linkedin.com/in/sreeharsh-k-707462215/" target="_blank" rel="noopener">LinkedIn</a> · <a href="mailto:sreeharshmayoor@gmail.com">sreeharshmayoor@gmail.com</a></span>
     <span>Structures: <a href="https://www.rcsb.org" target="_blank" rel="noopener">RCSB PDB</a> · Rendering: three.js</span>
   </div>
 </footer>

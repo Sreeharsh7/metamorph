@@ -87,15 +87,6 @@ strong { font-weight: 600; color: var(--text); }
 .wait-bar { flex: 1; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
 .wait-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
 
-/* your own structures */
-.yours .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.yours fieldset { border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px 12px; margin: 0; min-width: 0; }
-.yours legend { font-size: 12px; font-weight: 600; padding: 0 4px; }
-.yours label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); margin-top: 8px; }
-.yours input:not([type]), .yours input[type=number] { width: 84px; height: 32px; font-family: var(--mono); font-size: 13px; text-transform: uppercase; }
-.yours input[type=number] { text-transform: none; }
-.yours .file input { width: 100%; max-width: 160px; font-size: 11px; color: var(--muted); }
-body.dragging .yours { border-color: var(--accent); background: var(--accent-weak); }
 
 .refs { margin-top: 6px; font-size: 14px; color: var(--muted); }
 .refs summary { cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-2); }
@@ -106,7 +97,6 @@ body.dragging .yours { border-color: var(--accent); background: var(--accent-wea
 .credits dl { display: grid; grid-template-columns: 110px 1fr; gap: 8px 16px; font-size: 14px; margin: 0; color: var(--text-2); }
 .credits dt { color: var(--muted); font-size: 13px; }
 .credits dd { margin: 0; }
-.source { font-size: 12px; color: var(--muted); margin-top: 22px; }
 
 @media (max-width: 860px) {
   :root { --stage-h: 42vh; }
@@ -124,7 +114,6 @@ body.dragging .yours { border-color: var(--accent); background: var(--accent-wea
   .stage-caption { left: 10px; bottom: 10px; padding: 7px 10px; }
   .cap-name { font-size: 14px; }
   .legend, .stage-hint { display: none; }
-  .yours .pair { grid-template-columns: 1fr; }
   .credits dl { grid-template-columns: 1fr; gap: 2px; }
   .credits dd { margin-bottom: 10px; }
 }

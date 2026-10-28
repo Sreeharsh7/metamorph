@@ -167,40 +167,15 @@
       </details>
     </section>
 
-    <section class="step" data-step="yours" id="yours">
-      <p class="num">10</p>
-      <h2>Morph your own</h2>
-      <p>Give two structures of the same protein: PDB IDs and chains, or drop .pdb or .cif files. Residues are paired by number. Use the offset if one entry is numbered differently.</p>
-      <form class="card yours" id="yoursForm">
-        <div class="pair">
-          <fieldset><legend class="t-helix">State A</legend>
-            <label>PDB ID <input id="aId" value="2QKE" maxlength="4" autocomplete="off" spellcheck="false"></label>
-            <label>Chain <input id="aChain" value="B" maxlength="4" autocomplete="off"></label>
-            <label class="file">or file <input type="file" id="aFile" accept=".pdb,.cif,.ent,.mmcif"></label>
-          </fieldset>
-          <fieldset><legend class="t-strand">State B</legend>
-            <label>PDB ID <input id="bId" value="5JYT" maxlength="4" autocomplete="off" spellcheck="false"></label>
-            <label>Chain <input id="bChain" value="A" maxlength="4" autocomplete="off"></label>
-            <label class="file">or file <input type="file" id="bFile" accept=".pdb,.cif,.ent,.mmcif"></label>
-          </fieldset>
-        </div>
-        <label class="ctrl inline"><span>Offset added to B's residue numbers</span><input type="number" id="bOffset" value="0" step="1"></label>
-        <div class="row"><button class="btn primary" type="submit" id="yoursGo">Morph</button><span class="status" id="yoursStatus" aria-live="polite"></span></div>
-        <label class="ctrl"><span>Morph</span><input type="range" id="scrubYours" min="0" max="1000" value="0" disabled aria-label="Morph progress for your structures"></label>
-      </form>
-      <p class="aside">Everything runs in your browser; dropped files never leave your computer. Large proteins (over 700 residues) are trimmed to keep the morph fast.</p>
-    </section>
 
     <footer class="step credits" data-step="credits">
-      <h2>Credits</h2>
+      <h2>About</h2>
       <dl>
-        <dt>Made by</dt><dd>Sreeharsh · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a></dd>
-        <dt>Structures</dt><dd>RCSB Protein Data Bank (Berman et al., 2000) and the authors of 2OUG, 2LCL, 2QKE, 5JYT, 1J9O, 2JP1, 1DUJ and 1S2H, fetched live from the RCSB ModelServer with bundled copies for offline reading.</dd>
-        <dt>Inspired by</dt><dd><a href="https://proteinfighter.solab.org/" target="_blank" rel="noopener">Protein Fighter</a> (Ovchinnikov lab) and <a href="https://martin-steinegger.github.io/Fold-Spacer/" target="_blank" rel="noopener">Fold Spacer</a> (Steinegger lab).</dd>
-        <dt>Rendering</dt><dd><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> r160 (MIT). Secondary structure is assigned from Cα geometry on every frame.</dd>
-        <dt>Built with</dt><dd>Claude Code</dd>
+        <dt>Made by</dt><dd>Sreeharsh K</dd>
+        <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/sreeharsh-k-707462215/" target="_blank" rel="noopener">linkedin.com/in/sreeharsh-k-707462215</a></dd>
+        <dt>Email</dt><dd><a href="mailto:sreeharshmayoor@gmail.com">sreeharshmayoor@gmail.com</a></dd>
+        <dt>Structures</dt><dd>RCSB Protein Data Bank (Berman et al., 2000) and the authors of 2OUG, 2LCL, 2QKE, 5JYT, 1J9O, 2JP1, 1DUJ and 1S2H.</dd>
       </dl>
-      <p class="source" id="sourceNote"></p>
     </footer>
   </main>
 </div>
