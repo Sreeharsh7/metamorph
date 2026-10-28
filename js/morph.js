@@ -111,8 +111,14 @@ export function pairStates(resA, resB, cfgA = {}, cfgB = {}) {
   };
   const mA = map(resA, cfgA), mB = map(resB, cfgB);
   const nums = [...mA.keys()].filter(n => mB.has(n)).sort((a, b) => a - b);
-  let A = nums.map(n => mA.get(n)), B = nums.map(n => mB.get(n));
+  const { A, B } = superpose(nums.map(n => mA.get(n)), nums.map(n => mB.get(n)));
+  // breaks[i] = true when residue i and i+1 are not sequence neighbours (missing residue)
+  const breaks = nums.map((n, i) => i < nums.length - 1 && nums[i + 1] !== n + 1);
+  return { nums, A, B, breaks };
+}
 
+// A, B: paired [[x,y,z], ...]. Returns A centred and B superposed onto it.
+export function superpose(A, B) {
   // Iterative Gaussian-weighted superposition: the conserved core dominates the fit,
   // so the residues that genuinely refold show up as the ones that move.
   const cA = centroid(A);
@@ -126,9 +132,7 @@ export function pairStates(resA, resB, cfgA = {}, cfgB = {}) {
     Bs = Bc.map(p => { const r = rot(R, p); return [r[0] + cAw[0], r[1] + cAw[1], r[2] + cAw[2]]; });
     w = A.map((p, i) => Math.exp(-(dist(p, Bs[i]) ** 2) / (2 * 2.5 * 2.5)) + 1e-3);
   }
-  // breaks[i] = true when residue i and i+1 are not sequence neighbours (missing residue)
-  const breaks = nums.map((n, i) => i < nums.length - 1 && nums[i + 1] !== n + 1);
-  return { nums, A, B: Bs, breaks };
+  return { A, B: Bs };
 }
 
 // ---------- morph ----------
@@ -185,7 +189,7 @@ export function buildMorph(A, B, breaks, opts = {}) {
     const raw = [Float32Array.from(X)];
     let w = 0, T = waypoints[0];
     let pairs = [], stageSteps = 0, prevSq = Infinity;
-    for (let step = 0; step < 1600; step++, stageSteps++) {
+    for (let step = 0; step < 2400; step++, stageSteps++) {
       if (step % 4 === 0) pairs = neighbourPairs(X, n, 9.5);
       let maxDev = 0, sq = 0, sqB = 0;
       for (let i = 0; i < n; i++) {
@@ -275,17 +279,28 @@ export function buildMorph(A, B, breaks, opts = {}) {
   raw.strategy = 'direct';
   if (raw.stuck) {
     const ones = A.map(() => 1);
+    const wMove = disp.map(d => Math.min(1, Math.max(0, (d - 3) / 4)));
+    // Prefer routes that keep the conserved core folded: swing or locally open
+    // the moving segments first, and only swell the whole protein as a last resort.
     const tries = [
-      ['orbit +6', [...orbitWaypoints(10, 6), Bt]],
-      ['orbit +10', [...orbitWaypoints(12, 10), Bt]],
-      ['global unfold x1.6', [swollen(A, cA, 1.6, ones), swollen(B, cB, 1.6, ones), Bt]],
-      ['global unfold x2.2', [swollen(A, cA, 2.2, ones), swollen(B, cB, 2.2, ones), Bt]],
+      ['orbit +6', () => [...orbitWaypoints(10, 6), Bt]],
+      ['orbit +10', () => [...orbitWaypoints(12, 10), Bt]],
+      ['local unfold x2', () => [swollen(A, cA, 2, wMove), swollen(B, cB, 2, wMove), Bt]],
+      ['local unfold x3', () => [swollen(A, cA, 3, wMove), swollen(B, cB, 3, wMove), Bt]],
+      ['orbit +18', () => [...orbitWaypoints(16, 18), Bt]],
+      ['global unfold x1.6', () => [swollen(A, cA, 1.6, ones), swollen(B, cB, 1.6, ones), Bt]],
+      ['global unfold x2.2', () => [swollen(A, cA, 2.2, ones), swollen(B, cB, 2.2, ones), Bt]],
+      ['global unfold x3', () => [swollen(A, cA, 3, ones), swollen(B, cB, 3, ones), Bt]],
     ];
+    const resid = r => r.residual ? r.residual.reduce((a, d) => a + d * d, 0) : Infinity;
+    let best = raw;
     for (const [name, wp] of tries) {
-      const r = run(wp);
+      const r = run(wp());
       r.strategy = name;
-      if (!r.stuck) { raw = r; break; }
+      if (!r.stuck) { best = r; break; }
+      if (resid(r) < resid(best)) best = r;
     }
+    raw = best;
   }
   const last = raw[raw.length - 1];
   for (let f = 1; f <= 3; f++) {

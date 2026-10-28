@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Atlas morph check</title>
+<style>body{font:12px ui-monospace,monospace;background:#111;color:#ddd;padding:16px}td{padding:2px 8px}.bad{color:#ff6b6b}</style>
+<p>Builds every atlas morph and reports build time, strategy and the closest non-bonded Cα approach (relaxed vs linear), sampled over the frames.</p>
+<table id="t"><tr><th>#</th><th>pair</th><th>n</th><th>RMSD</th><th>ms</th><th>strategy</th><th>min Cα relaxed</th><th>min Cα linear</th><th>ends</th></tr></table>
+<script type="module">
+import { ATLAS } from '../data/atlas.js';
+import { superpose, buildMorph } from '../js/morph.js';
+const rows = [];
+window.__res = rows;
+// closest non-bonded (|i-j| >= 3) Cα distance over sampled frames
+function minCA(frames, n, every = 2) {
+  let m = Infinity;
+  for (let f = 0; f < frames.length; f += every) {
+    const P = frames[f];
+    for (let i = 0; i < n; i++) for (let j = i + 3; j < n; j++) {
+      const dx = P[i * 3] - P[j * 3], dy = P[i * 3 + 1] - P[j * 3 + 1], dz = P[i * 3 + 2] - P[j * 3 + 2];
+      const d = dx * dx + dy * dy + dz * dz; if (d < m) m = d;
+    }
+  }
+  return Math.sqrt(m);
+}
+const toPts = a => { const o = []; for (let i = 0; i < a.length; i += 3) o.push([a[i], a[i + 1], a[i + 2]]); return o; };
+const only = new URLSearchParams(location.search).get('only')?.split(',').map(Number);
+for (let k = 0; k < ATLAS.length; k++) {
+  if (only && !only.includes(k)) continue;
+  await new Promise(r => setTimeout(r, 0));
+  const e = ATLAS[k], n = e.seq.length;
+  const br = new Array(n).fill(false); for (const i of e.breaks) br[i] = true;
+  const { A, B } = superpose(toPts(e.A), toPts(e.B));
+  const t0 = performance.now();
+  const m = buildMorph(A, B, br);
+  const ms = performance.now() - t0;
+  const lin = buildMorph(A, B, br, { linear: true, frames: 40 });
+  const rmsd = Math.sqrt(m.dispA.reduce((s, d) => s + d * d, 0) / n);
+  const ends = Math.min(minCA([m.frames[0]], n), minCA([m.frames.at(-1)], n));
+  const r = { k, id: e.id, n, rmsd, ms, strategy: m.strategy + (m.stuck ? ' STUCK' : ''), relaxed: minCA(m.frames, n), linear: minCA(lin.frames, n), ends };
+  rows.push(r);
+  const tr = document.createElement('tr');
+  const bad = r.relaxed < Math.min(2.6, ends - 0.1) || m.stuck;
+  if (bad) tr.className = 'bad';
+  tr.innerHTML = [k, r.id, n, rmsd.toFixed(1), ms.toFixed(0), r.strategy, r.relaxed.toFixed(2), r.linear.toFixed(2), ends.toFixed(2)].map(v => `<td>${v}</td>`).join('');
+  document.getElementById('t').appendChild(tr);
+}
+window.__done = true;
+</script>

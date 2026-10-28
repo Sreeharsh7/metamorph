@@ -22,6 +22,7 @@ export class Viewer {
     this.inner = new THREE.Group(); this.pivot.add(this.inner);
     this.rotY = 0.6; this.rotX = 0.15; this.velY = 0; this.auto = 0.12; this.dragging = false;
     this.t = 0; this.target = 0; this.highlightMoving = false; this.useLinear = false;
+    this.emph = null;   // optional per-residue weight 0..1; low values are drawn faded
     this.zoomK = 1;
     this.protein = null; this.cartoon = null;
     this.bindDrag();
@@ -120,7 +121,7 @@ export class Viewer {
       let col = SS_COLORS[ss[i]];
       if (this.showClashes && this.clash[i]) col = CLASH;
       // optionally fade residues that barely move so the switching region stands out
-      const dim = this.highlightMoving ? 0.28 + 0.72 * Math.min(1, p.morph.disp[i] * 1.6) : 1;
+      const dim = this.emph ? 0.4 + 0.6 * this.emph[i] : this.highlightMoving ? 0.28 + 0.72 * Math.min(1, p.morph.disp[i] * 1.6) : 1;
       this.curCol[i * 3] += (col.r * dim - this.curCol[i * 3]) * k;
       this.curCol[i * 3 + 1] += (col.g * dim - this.curCol[i * 3 + 1]) * k;
       this.curCol[i * 3 + 2] += (col.b * dim - this.curCol[i * 3 + 2]) * k;

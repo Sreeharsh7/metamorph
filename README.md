@@ -15,6 +15,16 @@
 
 The landscapes and populations are illustrative: they follow the published trends but are not fitted to data.
 
+## Fold-Switch Atlas (`atlas.html`)
+
+A searchable database of **92 experimentally known fold-switching pairs**, each animated from one PDB structure to the other.
+
+- **Source list:** the pairs and their fold-switching regions come from Chakravarty & Porter (2022), *AlphaFold2 fails to predict protein fold switching*, Protein Science 31:e4353 ([github.com/ncbi/AF2_benchmark](https://github.com/ncbi/AF2_benchmark)), saved as `tools/fold_switch_pairs.csv`. One of their 93 pairs (SarA, 1FZP) has since been removed from the PDB.
+- **Build:** `python3 tools/build_atlas.py` fetches Cα coordinates and annotations from RCSB, pairs the two chains by global sequence alignment, maps the published region onto the alignment and writes `data/atlas.js` (~1 MB). Downloads are cached in `tools/raw/atlas/`.
+- **In the page:** filter by switch type (α → β, β → α, …) or search by protein, organism or PDB ID. The viewer plays the morph back and forth and fades everything outside the fold-switching region (or by residue motion). A track shows secondary structure along the chain for fold A, the current frame and fold B. Links go to both RCSB entries. Deep links work: `atlas.html#2OUG_C-6C6S_D`.
+- **Compare any two entries:** type two PDB IDs and chains; they are aligned and morphed in the browser.
+- **Morphs** are built on demand in a Web Worker (`js/morph-worker.js`), usually in well under a second; large rearrangements of 400–700 residues take a few seconds. `tools/atlas_check.html` builds all 92 and reports the closest Cα–Cα approach along each path. 90 route without the chain crowding itself. Two (3JV6/1ZK9 and 3O44/1XEZ) cannot be routed cleanly by this coarse model and are labelled "approximate path" in the page.
+
 ## Run locally
 
 It's a static site, but ES modules need a web server (opening `index.html` as a file won't work):
@@ -50,14 +60,21 @@ Push this folder to a repository, then in **Settings → Pages** choose *Deploy 
 
 ```
 index.html          the essay
+atlas.html          Fold-Switch Atlas
 css/style.css       styles
+css/atlas.css       atlas styles
 js/app.js           scroll tracking, section widgets, your-own form
+js/atlas.js         atlas list, filters, playback, SS track, compare form
+js/atlas-morph.js   one atlas morph (superpose, relax, SS per frame, quality)
+js/morph-worker.js  runs atlas morphs off the main thread
+js/ss.js            secondary structure from Cα
 js/viewer.js        sticky three.js viewer (drag to rotate)
 js/cartoon.js       Cα-only secondary structure and ribbon mesh
 js/landscape.js     SVG two-well free-energy figure
 js/morph.js         parsing, superposition, morph path, validation
 js/structures.js    RCSB fetch, fallback, PDB/mmCIF parsing
-data/fallback.js    bundled Cα coordinates
+data/fallback.js    bundled Cα coordinates for the essay
+data/atlas.js       92 fold-switching pairs (generated)
 vendor/three/       three.js r160 (MIT)
 tools/              bundler, validators, 2D filmstrips, raw mmCIF
 ```

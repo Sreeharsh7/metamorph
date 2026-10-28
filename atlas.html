@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fold-Switch Atlas</title>
+<meta name="description" content="Every experimentally known fold-switching protein pair, animated from one fold to the other with the switching region highlighted.">
+<meta name="theme-color" content="#0c0f15">
+<meta property="og:title" content="Fold-Switch Atlas · Metamorph">
+<meta property="og:description" content="92 experimentally known fold-switching protein pairs, each animated between its two PDB structures.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0f15'/%3E%3Cpath d='M10 38c5-16 10-16 15 0s10 16 15 0' fill='none' stroke='%235cb8b2' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M42 20h12l-6 8z' fill='%23e8b46a'/%3E%3Crect x='44' y='28' width='8' height='18' rx='2' fill='%23e8b46a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/atlas.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/build/three.module.min.js" } }
+</script>
+</head>
+<body class="atlas">
+<header class="topbar">
+  <a class="brand" href="index.html">Metamorph</a>
+  <nav class="toc" aria-label="Pages">
+    <a href="index.html">Guide</a>
+    <a href="atlas.html" aria-current="page">Atlas</a>
+  </nav>
+</header>
+
+<div class="atlas-layout">
+  <section class="panel" aria-label="Fold-switching proteins">
+    <div class="panel-head">
+      <p class="kicker">Fold-Switch Atlas</p>
+      <h1>Every known switch, <em>animated.</em></h1>
+      <p class="lede-sm"><span id="count">92</span> pairs of experimentally determined structures in which the same sequence (or a close homologue) adopts two different folds. Pick one to watch its fold-switching region change.</p>
+      <div class="search">
+        <input id="q" type="search" placeholder="Search protein, organism or PDB ID" autocomplete="off" spellcheck="false" aria-label="Search">
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by switch type"></div>
+    </div>
+    <ol class="list" id="list" aria-label="Pairs"></ol>
+    <form class="compare" id="compare">
+      <h2>Compare any two structures</h2>
+      <p>Two PDB entries of the same protein. Residues are paired by sequence alignment.</p>
+      <div class="cmp-row">
+        <label><span class="t-helix">A</span><input id="cA" value="2OUG" maxlength="4" aria-label="PDB ID A" autocomplete="off" spellcheck="false"></label>
+        <label>chain<input id="cAc" value="C" maxlength="4" aria-label="Chain A" autocomplete="off"></label>
+        <label><span class="t-strand">B</span><input id="cB" value="6C6S" maxlength="4" aria-label="PDB ID B" autocomplete="off" spellcheck="false"></label>
+        <label>chain<input id="cBc" value="D" maxlength="4" aria-label="Chain B" autocomplete="off"></label>
+        <button class="btn primary" type="submit" id="cGo">Morph</button>
+      </div>
+      <p class="status" id="cStatus" aria-live="polite"></p>
+    </form>
+    <footer class="atlas-credits">
+      Pairs and fold-switching regions: Chakravarty &amp; Porter (2022) <i>Protein Sci</i> 31:e4353, from the <a href="https://github.com/ncbi/AF2_benchmark" target="_blank" rel="noopener">NCBI AF2 benchmark</a> (one pair, SarA 1FZP, was removed from the PDB). Structures: <a href="https://www.rcsb.org" target="_blank" rel="noopener">RCSB PDB</a>. Paths are illustrative Cα morphs, not simulations. Made by Sreeharsh · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a>
+    </footer>
+  </section>
+
+  <section class="detail" aria-label="Selected pair">
+    <div class="viewport">
+      <canvas id="view"></canvas>
+      <div class="computing" id="computing" hidden><span></span><b id="computingText">Relaxing the path…</b></div>
+      <div class="vp-top">
+        <div>
+          <div class="d-name" id="dName">—</div>
+          <div class="d-org" id="dOrg"></div>
+        </div>
+        <div class="d-state" id="dState"></div>
+      </div>
+      <div class="vp-controls">
+        <button class="icon-btn" id="play" aria-label="Pause">❚❚</button>
+        <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Morph progress">
+        <div class="seg small" role="group" aria-label="Emphasis">
+          <button class="seg-btn on" id="emRegion" title="Fade everything outside the published fold-switching region">region</button>
+          <button class="seg-btn" id="emMove" title="Fade residues by how little they move">motion</button>
+          <button class="seg-btn" id="emNone">all</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-card">
+      <div class="track-head">
+        <span>Secondary structure along the chain</span>
+        <span class="legend"><i class="lg helix"></i>helix <i class="lg strand"></i>strand <i class="lg coil"></i>loop</span>
+      </div>
+      <div class="track-wrap">
+        <div class="track-rows" aria-hidden="true"><span class="t-helix">fold A</span><span>now</span><span class="t-strand">fold B</span></div>
+        <svg id="track" class="track" viewBox="0 0 600 92" preserveAspectRatio="none" role="img" aria-label="Secondary structure of fold A, the current frame and fold B"></svg>
+      </div>
+      <div class="track-labels"><span id="tStart"></span><span id="tRegion"></span><span id="tEnd"></span></div>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><span>Fold A</span><b><a id="fA" target="_blank" rel="noopener"></a></b><small id="fAm"></small></div>
+      <div class="fact"><span>Fold B</span><b><a id="fB" target="_blank" rel="noopener"></a></b><small id="fBm"></small></div>
+      <div class="fact"><span>Switch</span><b id="fType"></b><small id="fRegion"></small></div>
+      <div class="fact"><span>Change</span><b id="fRmsd"></b><small id="fQual"></small></div>
+    </div>
+    <div class="region-seq" id="regionSeq"></div>
+  </section>
+</div>
+<script type="module" src="js/atlas.js"></script>
+</body>
+</html>
