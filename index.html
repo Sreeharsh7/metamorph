@@ -2,163 +2,206 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Metamorph</title>
-<meta name="description" content="A side-scrolling runner where you play a real fold-switching protein. Change your fold to get through.">
-<meta name="theme-color" content="#05060b">
-<meta property="og:title" content="Metamorph: be a fold-switching protein">
-<meta property="og:description" content="One sequence, two folds. A runner built from real PDB structures of RfaH, KaiB, lymphotactin and Mad2.">
+<meta name="description" content="One sequence, two folds. An interactive guide to fold-switching proteins, drawn from real PDB structures.">
+<meta name="theme-color" content="#0c0f15">
+<meta property="og:title" content="Metamorph: one sequence, two folds">
+<meta property="og:description" content="An interactive guide to fold-switching proteins: RfaH, KaiB, lymphotactin and Mad2, morphing between their real structures.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305060b'/%3E%3Cpath d='M12 40c6-20 14-20 20 0s14 20 20 0' fill='none' stroke='%2338e8ff' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='24' r='7' fill='none' stroke='%23ffae3b' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0f15'/%3E%3Cpath d='M10 38c5-16 10-16 15 0s10 16 15 0' fill='none' stroke='%235cb8b2' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M42 20h12l-6 8z' fill='%23e8b46a'/%3E%3Crect x='44' y='28' width='8' height='18' rx='2' fill='%23e8b46a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script type="importmap">
-{ "imports": { "three": "./vendor/three/build/three.module.min.js", "three/addons/": "./vendor/three/examples/jsm/" } }
+{ "imports": { "three": "./vendor/three/build/three.module.min.js" } }
 </script>
 </head>
 <body>
-<canvas id="gl"></canvas>
+<header class="topbar">
+  <a class="brand" href="#top">Metamorph</a>
+  <nav class="toc" aria-label="Sections">
+    <a href="#exception">The switch</a>
+    <a href="#rfah">Four proteins</a>
+    <a href="#drawing">The morph</a>
+    <a href="#yours">Your own</a>
+  </nav>
+</header>
 
-<!-- HUD -->
-<div id="hud" class="hidden">
-  <div class="hud-top">
-    <div class="hud-left">
-      <div id="hudLevel" class="hud-level">RfaH</div>
-      <div class="progress"><div id="hudProgress"></div></div>
+<div class="layout">
+  <!-- sticky viewer -->
+  <aside class="stage" aria-label="3D structure viewer">
+    <canvas id="view"></canvas>
+    <div class="stage-loading" id="stageLoading"><span></span>Fetching structures from RCSB PDB…</div>
+    <div class="stage-caption">
+      <div class="cap-name" id="capName">RfaH C-terminal domain</div>
+      <div class="cap-state"><span id="capState">α-helical hairpin</span> <span class="cap-pdb" id="capPdb">PDB 2OUG</span></div>
+      <div class="legend"><i class="lg helix"></i>helix <i class="lg strand"></i>strand <i class="lg coil"></i>loop</div>
     </div>
-    <div class="hud-mid">
-      <div id="hudScore" class="hud-score">0</div>
-      <div id="hudHearts" class="hearts"></div>
-    </div>
-    <div class="hud-right">
-      <button id="btnMuteHud" class="icon-btn" aria-label="Mute"></button>
-      <button id="btnPause" class="icon-btn" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg></button>
-    </div>
-  </div>
-  <div id="hudBoss" class="hud-boss hidden"></div>
-  <div class="landscape-wrap">
-    <canvas id="landscape" width="240" height="110"></canvas>
-    <div id="foldTag" class="fold-tag"></div>
-  </div>
-  <div id="toasts"></div>
-  <div id="pops"></div>
-  <div id="banner" class="banner hidden"><h3></h3><p></p></div>
-  <div id="touch" class="touch">
-    <div class="tz tz-left"><span>Switch</span></div>
-    <div class="tz tz-right"><span>Jump</span></div>
-  </div>
-</div>
+    <div class="stage-hint">drag to rotate</div>
+  </aside>
 
-<!-- Screens -->
-<section id="loading" class="screen show">
-  <div class="logo small">METAMORPH</div>
-  <div class="loader"><span></span></div>
-  <p id="loadMsg" class="muted">Fetching structures from RCSB PDB…</p>
-</section>
+  <main class="essay" id="top">
+    <section class="step hero" data-step="hero">
+      <p class="kicker">An interactive guide to fold switching</p>
+      <h1>One sequence,<br><em>two folds.</em></h1>
+      <p class="lede">Most proteins fold into a single shape. A few have two, and switch between them when the cell asks. Scroll to watch real structures change.</p>
+      <p class="scroll-cue" aria-hidden="true">scroll ↓</p>
+    </section>
 
-<section id="menu" class="screen">
-  <div class="menu-inner">
-    <div class="logo">META<span class="b">MORPH</span></div>
-    <p class="tagline">One sequence. Two folds. Switch to survive.</p>
-    <div class="menu-buttons">
-      <button class="btn primary" data-go="levels">Play</button>
-      <button class="btn" id="btnEndless">Endless <small id="endlessBest"></small></button>
-      <div class="row">
-        <button class="btn ghost" data-modal="learn">Learn more</button>
-        <button class="btn ghost" data-modal="credits">Credits</button>
+    <section class="step" data-step="rule">
+      <p class="num">01</p>
+      <h2>The rule</h2>
+      <p>In the 1960s Christian Anfinsen showed that a protein's amino-acid sequence holds everything it needs to fold. Unfold ribonuclease, let it go, and it finds the same structure again. The working rule of structural biology followed: <strong>one sequence, one fold.</strong></p>
+      <p>On the right are 42 residues from the bacterial transcription factor RfaH, folded the way a crystal structure shows them: two α-helices packed side by side.</p>
+    </section>
+
+    <section class="step tall" data-step="exception" id="exception">
+      <p class="num">02</p>
+      <h2>The exception</h2>
+      <p>Keep scrolling. The <em>same</em> 42 residues unwind and refold into a five-stranded β-barrel. Both shapes are real, and both were solved experimentally (PDB 2OUG and 2LCL).</p>
+      <p>The colours follow secondary structure as it is re-assigned on every frame: <span class="t-helix">helix</span>, <span class="t-strand">strand</span> and <span class="t-coil">loop</span>. Residues that barely move are dimmed, so the part that switches stands out.</p>
+      <div class="scrub" aria-hidden="true"><div class="scrub-bar"><i id="scrubFill"></i></div><span id="scrubLabel">α-hairpin</span></div>
+      <p class="aside">Proteins that do this are called <strong>fold switchers</strong> or metamorphic proteins. Porter and Looger estimated in 2018 that 0.5–4% of proteins in the PDB may switch folds.</p>
+    </section>
+
+    <section class="step" data-step="landscape">
+      <p class="num">03</p>
+      <h2>Two wells, one barrier</h2>
+      <p>A fold switcher sits on a free-energy landscape with two valleys, one for each fold, separated by a barrier. The protein rests in one valley. Something has to push it over.</p>
+      <div class="card">
+        <div class="ls-host" id="lsGeneric"></div>
+        <label class="ctrl"><span>Trigger strength</span><input type="range" id="trigGeneric" min="0" max="100" value="0" aria-label="Trigger strength"></label>
+        <p class="ctrl-note" id="noteGeneric">No trigger: the left fold is stable.</p>
       </div>
-    </div>
-    <p id="menuSource" class="muted tiny"></p>
-  </div>
-  <button id="btnMuteMenu" class="icon-btn corner" aria-label="Mute"></button>
-</section>
+      <p>A trigger, such as a binding partner, temperature, salt or light, does two things. It <strong>tilts</strong> the landscape so the other fold becomes more stable, and it often <strong>lowers the barrier</strong> between them. Notice that the protein switches late and switches back late. In the middle range it stays wherever it already was, so a two-well protein can remember its recent past.</p>
+    </section>
 
-<section id="levels" class="screen">
-  <div class="panel wide">
-    <div class="panel-head"><button class="icon-btn" data-go="menu" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></button><h2>Choose a protein</h2></div>
-    <div id="levelGrid" class="level-grid"></div>
-  </div>
-</section>
+    <section class="step" data-step="rfah" id="rfah">
+      <p class="num">04 · <i>E. coli</i></p>
+      <h2>RfaH: a switch that changes jobs</h2>
+      <p>RfaH controls the transcription of long operons. Most of the time its C-terminal domain is an α-helical hairpin, packed against its own N-terminal domain, which keeps it switched off.</p>
+      <div class="card">
+        <div class="ls-host" id="lsRfah"></div>
+        <label class="toggle"><input type="checkbox" id="trigRfah"><span>RNA polymerase paused at an <i>ops</i> site</span></label>
+        <p class="ctrl-note" id="noteRfah">Autoinhibited: the CTD stays helical.</p>
+      </div>
+      <p>When RNA polymerase pauses at an <i>ops</i> DNA sequence, the N-terminal domain binds it and lets go of the CTD. Freed, the domain refolds into a β-barrel that binds ribosomal protein S10, coupling transcription to translation. Released again, it slowly folds back.</p>
+    </section>
 
-<section id="intro" class="screen">
-  <div class="panel">
-    <div class="eyebrow" id="introNum">Level 1</div>
-    <h2 id="introName">RfaH</h2>
-    <div class="muted small" id="introOrg"></div>
-    <canvas id="introThumb" width="560" height="220" class="thumb-big"></canvas>
-    <p id="introText"></p>
-    <p class="trigger" id="introTrigger"></p>
-    <div class="folds">
-      <div class="fold-card a"><b id="introFoldA"></b><span>Spring form: high jump · clears <i>walls</i> &amp; cyan gates</span></div>
-      <div class="fold-card b"><b id="introFoldB"></b><span>Shell form: rolls under <i>bars</i> · armoured vs <i>proteases</i> · amber gates</span></div>
-    </div>
-    <p class="boss-line" id="introBoss"></p>
-    <p class="controls muted small"><span class="kbd">↑</span> jump · <span class="kbd">↓</span> drop · <span class="kbd">Space</span> switch fold<span class="touch-only"> · tap right to jump, tap left to switch</span></p>
-    <div class="row"><button class="btn ghost" data-go="levels">Back</button><button class="btn primary" id="btnStart">Start</button></div>
-  </div>
-</section>
+    <section class="step" data-step="kaib">
+      <p class="num">05 · cyanobacteria</p>
+      <h2>KaiB: a switch that keeps time</h2>
+      <p>Three proteins, KaiA, KaiB and KaiC, make a 24-hour clock that keeps running in a test tube. KaiB's ground-state fold is the common one. A rarer, thioredoxin-like fold binds phosphorylated KaiC at night.</p>
+      <div class="card">
+        <div class="ls-host" id="lsKaib"></div>
+        <label class="ctrl"><span>Time of day <b id="clockLabel">12:00</b></span><input type="range" id="trigKaib" min="0" max="240" value="120" aria-label="Time of day"></label>
+        <p class="ctrl-note" id="noteKaib">Day: ground state.</p>
+      </div>
+      <p>The switch is <strong>slow</strong>, taking hours rather than milliseconds. That slowness is not a flaw: the delay it builds into the cycle helps set the clock's period. The animation here is sped up enormously.</p>
+    </section>
 
-<section id="pause" class="screen dim">
-  <div class="panel narrow">
-    <h2>Paused</h2>
-    <button class="btn primary" id="btnResume">Resume</button>
-    <button class="btn" id="btnRestart">Restart</button>
-    <button class="btn ghost" id="btnQuit">Menu</button>
-  </div>
-</section>
+    <section class="step" data-step="ltn">
+      <p class="num">06 · human</p>
+      <h2>Lymphotactin: two folds at once</h2>
+      <p>The chemokine lymphotactin (XCL1) is the most even-handed fold switcher known. Under physiological conditions it spends roughly equal time in two unrelated folds, swapping back and forth on a timescale of about a second.</p>
+      <div class="card">
+        <div class="ls-host" id="lsLtn"></div>
+        <label class="ctrl"><span>Temperature <b id="tempLabel">37 °C</b></span><input type="range" id="trigTemp" min="10" max="40" value="37" aria-label="Temperature"></label>
+        <label class="ctrl"><span>NaCl <b id="saltLabel">150 mM</b></span><input type="range" id="trigSalt" min="0" max="300" value="150" step="10" aria-label="Salt concentration"></label>
+        <div class="pop" aria-live="polite"><div class="pop-bar"><i id="popA"></i><i id="popB"></i></div><div class="pop-labels"><span class="t-helix" id="popAl">Ltn10 50%</span><span class="t-strand" id="popBl">Ltn40 50%</span></div></div>
+      </div>
+      <p><strong>Ltn10</strong>, the classic chemokine fold, is favoured by cold and salt and activates the receptor XCR1. <strong>Ltn40</strong>, an all-β dimer fold, is favoured by warmth and low salt and binds heparin. It does two jobs because it has two shapes. <span class="aside-inline">The populations shown follow those trends; they are not fitted to data.</span></p>
+    </section>
 
-<section id="end" class="screen dim">
-  <div class="panel">
-    <div class="eyebrow" id="endEyebrow"></div>
-    <h2 id="endTitle">Level complete</h2>
-    <div class="end-score"><span id="endScore">0</span><small id="endBest"></small></div>
-    <p id="endNote" class="muted small"></p>
-    <canvas id="endLoop" width="300" height="300" class="end-loop"></canvas>
-    <div class="row wrap">
-      <button class="btn primary" id="btnNext">Next protein</button>
-      <button class="btn" id="btnRetry">Retry</button>
-    </div>
-    <div class="row wrap">
-      <button class="btn ghost" id="btnShare">Share card</button>
-      <button class="btn ghost" id="btnSave">Save PNG</button>
-      <button class="btn ghost" data-modal="learn">Learn more</button>
-      <button class="btn ghost" id="btnEndMenu">Menu</button>
-    </div>
-  </div>
-</section>
+    <section class="step" data-step="mad2">
+      <p class="num">07 · human</p>
+      <h2>Mad2: a switch with a catalyst</h2>
+      <p>Before a cell divides, the spindle checkpoint makes sure every chromosome is attached. Mad2 is at its heart. Its open fold (O-Mad2) can close a "safety belt" around Cdc20, giving the closed fold (C-Mad2) that blocks anaphase.</p>
+      <div class="card">
+        <div class="ls-host" id="lsMad2"></div>
+        <label class="toggle"><input type="checkbox" id="trigMad2"><span>Mad1:C-Mad2 template at an unattached kinetochore</span></label>
+        <div class="row"><button class="btn" id="goMad2">Let it switch</button><button class="btn ghost" id="resetMad2">Re-open (TRIP13 + p31<sup>comet</sup>)</button></div>
+        <div class="wait" id="waitMad2"><div class="wait-bar"><i id="waitFill"></i></div><span id="waitLabel"></span></div>
+      </div>
+      <p>On its own the conversion takes hours, far too slow for the checkpoint. The <strong>template model</strong> explains how the cell speeds it up: closed Mad2 bound to Mad1 at unattached kinetochores grabs open Mad2 and catalyses its closing. The AAA+ ATPase TRIP13, with p31<sup>comet</sup>, spends ATP to pry it open again.</p>
+    </section>
 
-<!-- Modals -->
-<div id="learn" class="modal">
-  <div class="panel">
-    <div class="panel-head"><h2>Fold-switching proteins</h2><button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4"/></svg></button></div>
-    <p>Most proteins fold into one structure set by their amino-acid sequence. Fold-switching proteins break that rule: the same chain remodels its secondary and tertiary structure in response to a cellular cue, such as a binding partner, temperature, salt or the time of day, and flips between two stable, functional folds. They control transcription, circadian clocks, immune signalling and cell division. They are also a hard case for structure predictors that expect one sequence to give one structure, which makes them a frontier for computational biology.</p>
-    <p class="muted small">Every character here is drawn from the Cα coordinates of two experimentally determined structures. The morph between them is a coarse-grained, constraint-relaxed path computed in your browser: virtual bonds keep their length, the chain never passes through itself, and segments that change partners swing around the core. It is an illustration, not a simulation of the real pathway.</p>
-    <div class="links">
-      <a class="btn primary" href="https://www.biorxiv.org/content/10.64898/2026.08.16.745091v1" target="_blank" rel="noopener">Read the preprint</a>
-      <a class="btn" href="https://sreeharsh7.github.io" target="_blank" rel="noopener">Sreeharsh7.github.io</a>
-    </div>
-    <h3>Structures in the game</h3>
-    <ul class="pdb-list" id="pdbList"></ul>
-  </div>
+    <section class="step" data-step="drawing" id="drawing">
+      <p class="num">08</p>
+      <h2>How the morph is drawn</h2>
+      <p>Experiments give the two end states, not the path between them. The obvious shortcut is to slide every atom in a straight line from one structure to the other. Try it.</p>
+      <div class="card">
+        <div class="seg" role="group" aria-label="Interpolation method"><button class="seg-btn" id="mLinear">Straight lines</button><button class="seg-btn on" id="mRelaxed">Relaxed path</button></div>
+        <label class="ctrl"><span>Morph</span><input type="range" id="scrubDraw" min="0" max="1000" value="500" aria-label="Morph progress"></label>
+        <p class="readout" id="drawReadout">closest Cα–Cα approach: –</p>
+      </div>
+      <p>With straight lines, the chain passes right through itself; <span class="t-clash">red</span> marks Cα atoms closer than 3 Å. Metamorph instead moves each atom a fraction of an ångström at a time toward its target. Virtual bonds are held at 3.8 Å and atoms are kept from overlapping, so strands slide around each other. Where a segment has to change sides, as in Mad2, it lifts off the surface, swings around the core and docks. All four paths are checked so that no two chain segments come closer than about 2.9 Å.</p>
+      <p class="aside">This is an illustration of a physically allowed path, not a simulation of the real one. Real switches often go through partly unfolded states that experiments are only starting to resolve.</p>
+    </section>
+
+    <section class="step" data-step="why">
+      <p class="num">09</p>
+      <h2>Why it matters</h2>
+      <p>Fold switchers sit right on the fault line of modern structure prediction. Tools like AlphaFold2 learn one structure per sequence, and for most fold switchers they predict only one of the two folds. Finding the proteins that switch, and predicting both of their shapes, is an open problem.</p>
+      <p>That is the question behind my research on fold-switching proteins.</p>
+      <div class="links">
+        <a class="btn primary" href="https://www.biorxiv.org/content/10.64898/2026.08.16.745091v1" target="_blank" rel="noopener">Read the preprint ↗</a>
+        <a class="btn" href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io ↗</a>
+      </div>
+      <details class="refs">
+        <summary>Further reading</summary>
+        <ul>
+          <li>Anfinsen (1973) Principles that govern the folding of protein chains. <i>Science</i>.</li>
+          <li>Porter &amp; Looger (2018) Extant fold-switching proteins are widespread. <i>PNAS</i>.</li>
+          <li>Burmann et al. (2012) An α helix to β barrel domain switch transforms the transcription factor RfaH into a translation factor. <i>Cell</i>.</li>
+          <li>Chang et al. (2015) A protein fold switch joins the circadian oscillator to clock output in cyanobacteria. <i>Science</i>.</li>
+          <li>Tuinstra et al. (2008) Interconversion between two unrelated protein folds in the lymphotactin native state. <i>PNAS</i>.</li>
+          <li>Luo et al. (2004) The Mad2 spindle checkpoint protein has two distinct natively folded states. <i>Nat Struct Mol Biol</i>.</li>
+          <li>De Antoni et al. (2005) The Mad1/Mad2 complex as a template for Mad2 activation in the spindle assembly checkpoint. <i>Curr Biol</i>.</li>
+          <li>Chakravarty &amp; Porter (2022) AlphaFold2 fails to predict protein fold switching. <i>Protein Sci</i>.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="step" data-step="yours" id="yours">
+      <p class="num">10</p>
+      <h2>Morph your own</h2>
+      <p>Give two structures of the same protein: PDB IDs and chains, or drop .pdb or .cif files. Residues are paired by number. Use the offset if one entry is numbered differently.</p>
+      <form class="card yours" id="yoursForm">
+        <div class="pair">
+          <fieldset><legend class="t-helix">State A</legend>
+            <label>PDB ID <input id="aId" value="2QKE" maxlength="4" autocomplete="off" spellcheck="false"></label>
+            <label>Chain <input id="aChain" value="B" maxlength="4" autocomplete="off"></label>
+            <label class="file">or file <input type="file" id="aFile" accept=".pdb,.cif,.ent,.mmcif"></label>
+          </fieldset>
+          <fieldset><legend class="t-strand">State B</legend>
+            <label>PDB ID <input id="bId" value="5JYT" maxlength="4" autocomplete="off" spellcheck="false"></label>
+            <label>Chain <input id="bChain" value="A" maxlength="4" autocomplete="off"></label>
+            <label class="file">or file <input type="file" id="bFile" accept=".pdb,.cif,.ent,.mmcif"></label>
+          </fieldset>
+        </div>
+        <label class="ctrl inline"><span>Offset added to B's residue numbers</span><input type="number" id="bOffset" value="0" step="1"></label>
+        <div class="row"><button class="btn primary" type="submit" id="yoursGo">Morph</button><span class="status" id="yoursStatus" aria-live="polite"></span></div>
+        <label class="ctrl"><span>Morph</span><input type="range" id="scrubYours" min="0" max="1000" value="0" disabled aria-label="Morph progress for your structures"></label>
+      </form>
+      <p class="aside">Everything runs in your browser; dropped files never leave your computer. Large proteins (over 700 residues) are trimmed to keep the morph fast.</p>
+    </section>
+
+    <footer class="step credits" data-step="credits">
+      <h2>Credits</h2>
+      <dl>
+        <dt>Made by</dt><dd>Sreeharsh · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a></dd>
+        <dt>Structures</dt><dd>RCSB Protein Data Bank (Berman et al., 2000) and the authors of 2OUG, 2LCL, 2QKE, 5JYT, 1J9O, 2JP1, 1DUJ and 1S2H, fetched live from the RCSB ModelServer with bundled copies for offline reading.</dd>
+        <dt>Inspired by</dt><dd><a href="https://proteinfighter.solab.org/" target="_blank" rel="noopener">Protein Fighter</a> (Ovchinnikov lab) and <a href="https://martin-steinegger.github.io/Fold-Spacer/" target="_blank" rel="noopener">Fold Spacer</a> (Steinegger lab).</dd>
+        <dt>Rendering</dt><dd><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> r160 (MIT). Secondary structure is assigned from Cα geometry on every frame.</dd>
+        <dt>Built with</dt><dd>Claude Code</dd>
+      </dl>
+      <p class="source" id="sourceNote"></p>
+    </footer>
+  </main>
 </div>
-
-<div id="credits" class="modal">
-  <div class="panel">
-    <div class="panel-head"><h2>Credits</h2><button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4"/></svg></button></div>
-    <dl class="credits">
-      <dt>Created by</dt><dd>Sreeharsh · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a></dd>
-      <dt>Structures</dt><dd>RCSB Protein Data Bank (Berman et al., 2000, <i>Nucleic Acids Res.</i>) and the authors of entries 2OUG, 2LCL, 2QKE, 5JYT, 1J9O, 2JP1, 1DUJ and 1S2H. Coordinates are fetched live from the RCSB ModelServer, with bundled copies for offline play.</dd>
-      <dt>Rendering</dt><dd><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> r160 (MIT licence)</dd>
-      <dt>Sound</dt><dd>Generated live with the Web Audio API</dd>
-      <dt>Type</dt><dd>Space Grotesk &amp; JetBrains Mono (SIL OFL)</dd>
-      <dt>Built with</dt><dd>Claude Code</dd>
-    </dl>
-  </div>
-</div>
-
-<button id="btnRotate" class="hidden"></button>
-<script type="module" src="js/main.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // 2D drawing of Cα traces (level thumbnails, end-screen loop, share card).
-import { sampleMorph } from './morph.js';
+import { sampleMorph } from '../js/morph.js';
 
 export const HEX = { a: '#38e8ff', b: '#ffae3b' };
 
