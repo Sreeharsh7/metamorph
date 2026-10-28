@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><title>Morph validation</title>
+<style>body{background:#07080d;color:#cfe;font:13px ui-monospace,monospace;padding:16px}</style>
+<pre id="out"></pre>
+<script type="module">
+const out = document.getElementById('out');
+console.log = (...a) => { out.textContent += a.join(' ') + '\n'; };
+await import('./validate.js');
+document.title = 'done';
+</script>

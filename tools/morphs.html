@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><title>Morph filmstrips</title>
+<style>body{background:#07080d;color:#cfe;font:13px ui-monospace,monospace;margin:12px}canvas{display:block;margin:4px 0 18px}</style>
+<div id="out"></div>
+<script type="module">
+// Filmstrip of each level's morph (same projection for every frame) for visual QA.
+import { loadProtein } from '../js/structures.js';
+import { viewBasis, frameExtent, drawTrace, mixHex, HEX } from '../js/share.js';
+import { sampleMorph } from '../js/morph.js';
+const out = document.getElementById('out');
+for (const id of ['rfah', 'kaib', 'ltn', 'mad2']) {
+  const p = await loadProtein(id);
+  const T = [0, 0.2, 0.4, 0.5, 0.6, 0.8, 1];
+  const c = document.createElement('canvas'); c.width = 1400; c.height = 210;
+  const g = c.getContext('2d');
+  const f = p.morph.frames, basis = viewBasis(f[0]), ext = frameExtent(f, basis);
+  const buf = new Float32Array(p.morph.n * 3);
+  T.forEach((t, k) => { sampleMorph(p.morph, t, buf); drawTrace(g, buf, 100 + k * 200, 105, 190, mixHex(HEX.a, HEX.b, t), basis, 0.3, ext);
+    g.fillStyle = '#889'; g.fillText('t=' + t, 70 + k * 200, 205); });
+  const h = document.createElement('div'); h.textContent = `${id}: ${p.pdbA} → ${p.pdbB}, ${p.morph.n} residues, ${f.length} frames, path: ${p.morph.strategy}, source: ${p.source}`;
+  out.append(h, c);
+}
+document.title = 'done';
+</script>

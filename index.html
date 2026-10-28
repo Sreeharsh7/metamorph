@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Metamorph</title>
+<meta name="description" content="A side-scrolling runner where you play a real fold-switching protein. Change your fold to get through.">
+<meta name="theme-color" content="#05060b">
+<meta property="og:title" content="Metamorph: be a fold-switching protein">
+<meta property="og:description" content="One sequence, two folds. A runner built from real PDB structures of RfaH, KaiB, lymphotactin and Mad2.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305060b'/%3E%3Cpath d='M12 40c6-20 14-20 20 0s14 20 20 0' fill='none' stroke='%2338e8ff' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='24' r='7' fill='none' stroke='%23ffae3b' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/build/three.module.min.js", "three/addons/": "./vendor/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="hud-left">
+      <div id="hudLevel" class="hud-level">RfaH</div>
+      <div class="progress"><div id="hudProgress"></div></div>
+    </div>
+    <div class="hud-mid">
+      <div id="hudScore" class="hud-score">0</div>
+      <div id="hudHearts" class="hearts"></div>
+    </div>
+    <div class="hud-right">
+      <button id="btnMuteHud" class="icon-btn" aria-label="Mute"></button>
+      <button id="btnPause" class="icon-btn" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg></button>
+    </div>
+  </div>
+  <div id="hudBoss" class="hud-boss hidden"></div>
+  <div class="landscape-wrap">
+    <canvas id="landscape" width="240" height="110"></canvas>
+    <div id="foldTag" class="fold-tag"></div>
+  </div>
+  <div id="toasts"></div>
+  <div id="pops"></div>
+  <div id="banner" class="banner hidden"><h3></h3><p></p></div>
+  <div id="touch" class="touch">
+    <div class="tz tz-left"><span>Switch</span></div>
+    <div class="tz tz-right"><span>Jump</span></div>
+  </div>
+</div>
+
+<!-- Screens -->
+<section id="loading" class="screen show">
+  <div class="logo small">METAMORPH</div>
+  <div class="loader"><span></span></div>
+  <p id="loadMsg" class="muted">Fetching structures from RCSB PDB…</p>
+</section>
+
+<section id="menu" class="screen">
+  <div class="menu-inner">
+    <div class="logo">META<span class="b">MORPH</span></div>
+    <p class="tagline">One sequence. Two folds. Switch to survive.</p>
+    <div class="menu-buttons">
+      <button class="btn primary" data-go="levels">Play</button>
+      <button class="btn" id="btnEndless">Endless <small id="endlessBest"></small></button>
+      <div class="row">
+        <button class="btn ghost" data-modal="learn">Learn more</button>
+        <button class="btn ghost" data-modal="credits">Credits</button>
+      </div>
+    </div>
+    <p id="menuSource" class="muted tiny"></p>
+  </div>
+  <button id="btnMuteMenu" class="icon-btn corner" aria-label="Mute"></button>
+</section>
+
+<section id="levels" class="screen">
+  <div class="panel wide">
+    <div class="panel-head"><button class="icon-btn" data-go="menu" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></button><h2>Choose a protein</h2></div>
+    <div id="levelGrid" class="level-grid"></div>
+  </div>
+</section>
+
+<section id="intro" class="screen">
+  <div class="panel">
+    <div class="eyebrow" id="introNum">Level 1</div>
+    <h2 id="introName">RfaH</h2>
+    <div class="muted small" id="introOrg"></div>
+    <canvas id="introThumb" width="560" height="220" class="thumb-big"></canvas>
+    <p id="introText"></p>
+    <p class="trigger" id="introTrigger"></p>
+    <div class="folds">
+      <div class="fold-card a"><b id="introFoldA"></b><span>Spring form: high jump · clears <i>walls</i> &amp; cyan gates</span></div>
+      <div class="fold-card b"><b id="introFoldB"></b><span>Shell form: rolls under <i>bars</i> · armoured vs <i>proteases</i> · amber gates</span></div>
+    </div>
+    <p class="boss-line" id="introBoss"></p>
+    <p class="controls muted small"><span class="kbd">↑</span> jump · <span class="kbd">↓</span> drop · <span class="kbd">Space</span> switch fold<span class="touch-only"> · tap right to jump, tap left to switch</span></p>
+    <div class="row"><button class="btn ghost" data-go="levels">Back</button><button class="btn primary" id="btnStart">Start</button></div>
+  </div>
+</section>
+
+<section id="pause" class="screen dim">
+  <div class="panel narrow">
+    <h2>Paused</h2>
+    <button class="btn primary" id="btnResume">Resume</button>
+    <button class="btn" id="btnRestart">Restart</button>
+    <button class="btn ghost" id="btnQuit">Menu</button>
+  </div>
+</section>
+
+<section id="end" class="screen dim">
+  <div class="panel">
+    <div class="eyebrow" id="endEyebrow"></div>
+    <h2 id="endTitle">Level complete</h2>
+    <div class="end-score"><span id="endScore">0</span><small id="endBest"></small></div>
+    <p id="endNote" class="muted small"></p>
+    <canvas id="endLoop" width="300" height="300" class="end-loop"></canvas>
+    <div class="row wrap">
+      <button class="btn primary" id="btnNext">Next protein</button>
+      <button class="btn" id="btnRetry">Retry</button>
+    </div>
+    <div class="row wrap">
+      <button class="btn ghost" id="btnShare">Share card</button>
+      <button class="btn ghost" id="btnSave">Save PNG</button>
+      <button class="btn ghost" data-modal="learn">Learn more</button>
+      <button class="btn ghost" id="btnEndMenu">Menu</button>
+    </div>
+  </div>
+</section>
+
+<!-- Modals -->
+<div id="learn" class="modal">
+  <div class="panel">
+    <div class="panel-head"><h2>Fold-switching proteins</h2><button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4"/></svg></button></div>
+    <p>Most proteins fold into one structure set by their amino-acid sequence. Fold-switching proteins break that rule: the same chain remodels its secondary and tertiary structure in response to a cellular cue, such as a binding partner, temperature, salt or the time of day, and flips between two stable, functional folds. They control transcription, circadian clocks, immune signalling and cell division. They are also a hard case for structure predictors that expect one sequence to give one structure, which makes them a frontier for computational biology.</p>
+    <p class="muted small">Every character here is drawn from the Cα coordinates of two experimentally determined structures. The morph between them is a coarse-grained, constraint-relaxed path computed in your browser: virtual bonds keep their length, the chain never passes through itself, and segments that change partners swing around the core. It is an illustration, not a simulation of the real pathway.</p>
+    <div class="links">
+      <a class="btn primary" href="https://www.biorxiv.org/content/10.64898/2026.08.16.745091v1" target="_blank" rel="noopener">Read the preprint</a>
+      <a class="btn" href="https://sreeharsh7.github.io" target="_blank" rel="noopener">Sreeharsh7.github.io</a>
+    </div>
+    <h3>Structures in the game</h3>
+    <ul class="pdb-list" id="pdbList"></ul>
+  </div>
+</div>
+
+<div id="credits" class="modal">
+  <div class="panel">
+    <div class="panel-head"><h2>Credits</h2><button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4"/></svg></button></div>
+    <dl class="credits">
+      <dt>Created by</dt><dd>Sreeharsh · <a href="https://sreeharsh7.github.io" target="_blank" rel="noopener">sreeharsh7.github.io</a></dd>
+      <dt>Structures</dt><dd>RCSB Protein Data Bank (Berman et al., 2000, <i>Nucleic Acids Res.</i>) and the authors of entries 2OUG, 2LCL, 2QKE, 5JYT, 1J9O, 2JP1, 1DUJ and 1S2H. Coordinates are fetched live from the RCSB ModelServer, with bundled copies for offline play.</dd>
+      <dt>Rendering</dt><dd><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> r160 (MIT licence)</dd>
+      <dt>Sound</dt><dd>Generated live with the Web Audio API</dd>
+      <dt>Type</dt><dd>Space Grotesk &amp; JetBrains Mono (SIL OFL)</dd>
+      <dt>Built with</dt><dd>Claude Code</dd>
+    </dl>
+  </div>
+</div>
+
+<button id="btnRotate" class="hidden"></button>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,647 @@
+data_2LCL
+#
+_model_server_result.job_id            cGdt5ebLSJjyWFnlFp6hRQ 
+_model_server_result.datetime_utc      '2026-10-28 14:22:18' 
+_model_server_result.server_version    0.9.13 
+_model_server_result.query_name        atoms 
+_model_server_result.source_id         pdb-bcif 
+_model_server_result.entry_id          2lcl 
+#
+_model_server_params.name     atom_site 
+_model_server_params.value    '{"label_atom_id":"CA"}' 
+#
+_entry.id    2LCL 
+#
+_exptl.entry_id    2LCL 
+_exptl.method      'SOLUTION NMR' 
+#
+_entity.details                     ? 
+_entity.formula_weight              7269.332 
+_entity.id                          1 
+_entity.src_method                  man 
+_entity.type                        polymer 
+_entity.pdbx_description            'Transcriptional activator rfaH' 
+_entity.pdbx_number_of_molecules    1 
+_entity.pdbx_parent_entity_id       . 
+_entity.pdbx_mutation               ? 
+_entity.pdbx_fragment               'sequence database residues 101-162' 
+_entity.pdbx_ec                     ? 
+#
+_pdbx_struct_assembly.method_details        ? 
+_pdbx_struct_assembly.oligomeric_details    monomeric 
+_pdbx_struct_assembly.oligomeric_count      1 
+_pdbx_struct_assembly.details               author_defined_assembly 
+_pdbx_struct_assembly.id                    1 
+#
+_pdbx_struct_assembly_gen.asym_id_list       A 
+_pdbx_struct_assembly_gen.assembly_id        1 
+_pdbx_struct_assembly_gen.oper_expression    1 
+#
+_pdbx_struct_oper_list.id                    1 
+_pdbx_struct_oper_list.type                  'identity operation' 
+_pdbx_struct_oper_list.name                  1_555 
+_pdbx_struct_oper_list.symmetry_operation    x,y,z 
+_pdbx_struct_oper_list.matrix[1][1]          1 
+_pdbx_struct_oper_list.matrix[1][2]          0 
+_pdbx_struct_oper_list.matrix[1][3]          0 
+_pdbx_struct_oper_list.matrix[2][1]          0 
+_pdbx_struct_oper_list.matrix[2][2]          1 
+_pdbx_struct_oper_list.matrix[2][3]          0 
+_pdbx_struct_oper_list.matrix[3][1]          0 
+_pdbx_struct_oper_list.matrix[3][2]          0 
+_pdbx_struct_oper_list.matrix[3][3]          1 
+_pdbx_struct_oper_list.vector[1]             0 
+_pdbx_struct_oper_list.vector[2]             0 
+_pdbx_struct_oper_list.vector[3]             0 
+#
+loop_
+_struct_sheet_range.sheet_id
+_struct_sheet_range.id
+_struct_sheet_range.beg_label_comp_id
+_struct_sheet_range.beg_label_seq_id
+_struct_sheet_range.pdbx_beg_PDB_ins_code
+_struct_sheet_range.beg_label_asym_id
+_struct_sheet_range.beg_label_entity_id
+_struct_sheet_range.beg_auth_comp_id
+_struct_sheet_range.beg_auth_seq_id
+_struct_sheet_range.beg_auth_asym_id
+_struct_sheet_range.end_label_comp_id
+_struct_sheet_range.end_label_seq_id
+_struct_sheet_range.pdbx_end_PDB_ins_code
+_struct_sheet_range.end_label_asym_id
+_struct_sheet_range.end_label_entity_id
+_struct_sheet_range.end_auth_comp_id
+_struct_sheet_range.end_auth_seq_id
+_struct_sheet_range.end_auth_asym_id
+_struct_sheet_range.symmetry
+A 1 LYS 19 . A 1 LYS 115 A ILE 22 . A 1 ILE 118 A ? 
+A 2 GLN 31 . A 1 GLN 127 A PHE 34 . A 1 PHE 130 A ? 
+A 3 ARG 42 . A 1 ARG 138 A ASN 48 . A 1 ASN 144 A ? 
+A 4 GLU 53 . A 1 GLU 149 A LYS 59 . A 1 LYS 155 A ? 
+A 5 PHE 63 . A 1 PHE 159 A LYS 65 . A 1 LYS 161 A ? 
+#
+_struct_asym.details                        ? 
+_struct_asym.entity_id                      1 
+_struct_asym.id                             A 
+_struct_asym.pdbx_modified                  N 
+_struct_asym.pdbx_blank_PDB_chainid_flag    N 
+#
+_entity_poly.entity_id                       1 
+_entity_poly.nstd_linkage                    no 
+_entity_poly.nstd_monomer                    no 
+_entity_poly.type                            polypeptide(L) 
+_entity_poly.pdbx_strand_id                  A 
+_entity_poly.pdbx_seq_one_letter_code        GAMGPKDIVDPATPYPGDKVIITEGAFEGFQAIFTEPDGEARSMLLLNLINKEIKHSVKNTEFRKL 
+_entity_poly.pdbx_seq_one_letter_code_can    GAMGPKDIVDPATPYPGDKVIITEGAFEGFQAIFTEPDGEARSMLLLNLINKEIKHSVKNTEFRKL 
+_entity_poly.pdbx_target_identifier          ? 
+#
+loop_
+_entity_poly_seq.entity_id
+_entity_poly_seq.hetero
+_entity_poly_seq.mon_id
+_entity_poly_seq.num
+1 n GLY 1 
+1 n ALA 2 
+1 n MET 3 
+1 n GLY 4 
+1 n PRO 5 
+1 n LYS 6 
+1 n ASP 7 
+1 n ILE 8 
+1 n VAL 9 
+1 n ASP 10 
+1 n PRO 11 
+1 n ALA 12 
+1 n THR 13 
+1 n PRO 14 
+1 n TYR 15 
+1 n PRO 16 
+1 n GLY 17 
+1 n ASP 18 
+1 n LYS 19 
+1 n VAL 20 
+1 n ILE 21 
+1 n ILE 22 
+1 n THR 23 
+1 n GLU 24 
+1 n GLY 25 
+1 n ALA 26 
+1 n PHE 27 
+1 n GLU 28 
+1 n GLY 29 
+1 n PHE 30 
+1 n GLN 31 
+1 n ALA 32 
+1 n ILE 33 
+1 n PHE 34 
+1 n THR 35 
+1 n GLU 36 
+1 n PRO 37 
+1 n ASP 38 
+1 n GLY 39 
+1 n GLU 40 
+1 n ALA 41 
+1 n ARG 42 
+1 n SER 43 
+1 n MET 44 
+1 n LEU 45 
+1 n LEU 46 
+1 n LEU 47 
+1 n ASN 48 
+1 n LEU 49 
+1 n ILE 50 
+1 n ASN 51 
+1 n LYS 52 
+1 n GLU 53 
+1 n ILE 54 
+1 n LYS 55 
+1 n HIS 56 
+1 n SER 57 
+1 n VAL 58 
+1 n LYS 59 
+1 n ASN 60 
+1 n THR 61 
+1 n GLU 62 
+1 n PHE 63 
+1 n ARG 64 
+1 n LYS 65 
+1 n LEU 66 
+#
+loop_
+_chem_comp.formula
+_chem_comp.formula_weight
+_chem_comp.id
+_chem_comp.mon_nstd_flag
+_chem_comp.name
+_chem_comp.type
+_chem_comp.pdbx_synonyms
+'C3 H7 N O2' 89.093 ALA y ALANINE 'l-peptide linking' ? 
+'C6 H15 N4 O2 1' 175.209 ARG y ARGININE 'l-peptide linking' ? 
+'C4 H8 N2 O3' 132.118 ASN y ASPARAGINE 'l-peptide linking' ? 
+'C4 H7 N O4' 133.103 ASP y 'ASPARTIC ACID' 'l-peptide linking' ? 
+'C5 H10 N2 O3' 146.144 GLN y GLUTAMINE 'l-peptide linking' ? 
+'C5 H9 N O4' 147.129 GLU y 'GLUTAMIC ACID' 'l-peptide linking' ? 
+'C2 H5 N O2' 75.067 GLY y GLYCINE 'peptide linking' ? 
+'C6 H10 N3 O2 1' 156.162 HIS y HISTIDINE 'l-peptide linking' ? 
+'C6 H13 N O2' 131.173 ILE y ISOLEUCINE 'l-peptide linking' ? 
+'C6 H13 N O2' 131.173 LEU y LEUCINE 'l-peptide linking' ? 
+'C6 H15 N2 O2 1' 147.195 LYS y LYSINE 'l-peptide linking' ? 
+'C5 H11 N O2 S' 149.211 MET y METHIONINE 'l-peptide linking' ? 
+'C9 H11 N O2' 165.189 PHE y PHENYLALANINE 'l-peptide linking' ? 
+'C5 H9 N O2' 115.13 PRO y PROLINE 'l-peptide linking' ? 
+'C3 H7 N O3' 105.093 SER y SERINE 'l-peptide linking' ? 
+'C4 H9 N O3' 119.119 THR y THREONINE 'l-peptide linking' ? 
+'C9 H11 N O3' 181.189 TYR y TYROSINE 'l-peptide linking' ? 
+'C5 H11 N O2' 117.146 VAL y VALINE 'l-peptide linking' ? 
+#
+loop_
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.comp_id
+_chem_comp_bond.value_order
+_chem_comp_bond.pdbx_ordinal
+_chem_comp_bond.pdbx_stereo_config
+_chem_comp_bond.pdbx_aromatic_flag
+N CA ALA sing 1 n n 
+N H ALA sing 2 n n 
+N H2 ALA sing 3 n n 
+CA C ALA sing 4 n n 
+CA CB ALA sing 5 n n 
+CA HA ALA sing 6 n n 
+C O ALA doub 7 n n 
+C OXT ALA sing 8 n n 
+CB HB1 ALA sing 9 n n 
+CB HB2 ALA sing 10 n n 
+CB HB3 ALA sing 11 n n 
+OXT HXT ALA sing 12 n n 
+N CA ARG sing 13 n n 
+N H ARG sing 14 n n 
+N H2 ARG sing 15 n n 
+CA C ARG sing 16 n n 
+CA CB ARG sing 17 n n 
+CA HA ARG sing 18 n n 
+C O ARG doub 19 n n 
+C OXT ARG sing 20 n n 
+CB CG ARG sing 21 n n 
+CB HB2 ARG sing 22 n n 
+CB HB3 ARG sing 23 n n 
+CG CD ARG sing 24 n n 
+CG HG2 ARG sing 25 n n 
+CG HG3 ARG sing 26 n n 
+CD NE ARG sing 27 n n 
+CD HD2 ARG sing 28 n n 
+CD HD3 ARG sing 29 n n 
+NE CZ ARG sing 30 n n 
+NE HE ARG sing 31 n n 
+CZ NH1 ARG sing 32 n n 
+CZ NH2 ARG doub 33 n n 
+NH1 HH11 ARG sing 34 n n 
+NH1 HH12 ARG sing 35 n n 
+NH2 HH21 ARG sing 36 n n 
+NH2 HH22 ARG sing 37 n n 
+OXT HXT ARG sing 38 n n 
+N CA ASN sing 39 n n 
+N H ASN sing 40 n n 
+N H2 ASN sing 41 n n 
+CA C ASN sing 42 n n 
+CA CB ASN sing 43 n n 
+CA HA ASN sing 44 n n 
+C O ASN doub 45 n n 
+C OXT ASN sing 46 n n 
+CB CG ASN sing 47 n n 
+CB HB2 ASN sing 48 n n 
+CB HB3 ASN sing 49 n n 
+CG OD1 ASN doub 50 n n 
+CG ND2 ASN sing 51 n n 
+ND2 HD21 ASN sing 52 n n 
+ND2 HD22 ASN sing 53 n n 
+OXT HXT ASN sing 54 n n 
+N CA ASP sing 55 n n 
+N H ASP sing 56 n n 
+N H2 ASP sing 57 n n 
+CA C ASP sing 58 n n 
+CA CB ASP sing 59 n n 
+CA HA ASP sing 60 n n 
+C O ASP doub 61 n n 
+C OXT ASP sing 62 n n 
+CB CG ASP sing 63 n n 
+CB HB2 ASP sing 64 n n 
+CB HB3 ASP sing 65 n n 
+CG OD1 ASP doub 66 n n 
+CG OD2 ASP sing 67 n n 
+OD2 HD2 ASP sing 68 n n 
+OXT HXT ASP sing 69 n n 
+N CA GLN sing 70 n n 
+N H GLN sing 71 n n 
+N H2 GLN sing 72 n n 
+CA C GLN sing 73 n n 
+CA CB GLN sing 74 n n 
+CA HA GLN sing 75 n n 
+C O GLN doub 76 n n 
+C OXT GLN sing 77 n n 
+CB CG GLN sing 78 n n 
+CB HB2 GLN sing 79 n n 
+CB HB3 GLN sing 80 n n 
+CG CD GLN sing 81 n n 
+CG HG2 GLN sing 82 n n 
+CG HG3 GLN sing 83 n n 
+CD OE1 GLN doub 84 n n 
+CD NE2 GLN sing 85 n n 
+NE2 HE21 GLN sing 86 n n 
+NE2 HE22 GLN sing 87 n n 
+OXT HXT GLN sing 88 n n 
+N CA GLU sing 89 n n 
+N H GLU sing 90 n n 
+N H2 GLU sing 91 n n 
+CA C GLU sing 92 n n 
+CA CB GLU sing 93 n n 
+CA HA GLU sing 94 n n 
+C O GLU doub 95 n n 
+C OXT GLU sing 96 n n 
+CB CG GLU sing 97 n n 
+CB HB2 GLU sing 98 n n 
+CB HB3 GLU sing 99 n n 
+CG CD GLU sing 100 n n 
+CG HG2 GLU sing 101 n n 
+CG HG3 GLU sing 102 n n 
+CD OE1 GLU doub 103 n n 
+CD OE2 GLU sing 104 n n 
+OE2 HE2 GLU sing 105 n n 
+OXT HXT GLU sing 106 n n 
+N CA GLY sing 107 n n 
+N H GLY sing 108 n n 
+N H2 GLY sing 109 n n 
+CA C GLY sing 110 n n 
+CA HA2 GLY sing 111 n n 
+CA HA3 GLY sing 112 n n 
+C O GLY doub 113 n n 
+C OXT GLY sing 114 n n 
+OXT HXT GLY sing 115 n n 
+N CA HIS sing 116 n n 
+N H HIS sing 117 n n 
+N H2 HIS sing 118 n n 
+CA C HIS sing 119 n n 
+CA CB HIS sing 120 n n 
+CA HA HIS sing 121 n n 
+C O HIS doub 122 n n 
+C OXT HIS sing 123 n n 
+CB CG HIS sing 124 n n 
+CB HB2 HIS sing 125 n n 
+CB HB3 HIS sing 126 n n 
+CG ND1 HIS sing 127 n y 
+CG CD2 HIS doub 128 n y 
+ND1 CE1 HIS doub 129 n y 
+ND1 HD1 HIS sing 130 n n 
+CD2 NE2 HIS sing 131 n y 
+CD2 HD2 HIS sing 132 n n 
+CE1 NE2 HIS sing 133 n y 
+CE1 HE1 HIS sing 134 n n 
+NE2 HE2 HIS sing 135 n n 
+OXT HXT HIS sing 136 n n 
+N CA ILE sing 137 n n 
+N H ILE sing 138 n n 
+N H2 ILE sing 139 n n 
+CA C ILE sing 140 n n 
+CA CB ILE sing 141 n n 
+CA HA ILE sing 142 n n 
+C O ILE doub 143 n n 
+C OXT ILE sing 144 n n 
+CB CG1 ILE sing 145 n n 
+CB CG2 ILE sing 146 n n 
+CB HB ILE sing 147 n n 
+CG1 CD1 ILE sing 148 n n 
+CG1 HG12 ILE sing 149 n n 
+CG1 HG13 ILE sing 150 n n 
+CG2 HG21 ILE sing 151 n n 
+CG2 HG22 ILE sing 152 n n 
+CG2 HG23 ILE sing 153 n n 
+CD1 HD11 ILE sing 154 n n 
+CD1 HD12 ILE sing 155 n n 
+CD1 HD13 ILE sing 156 n n 
+OXT HXT ILE sing 157 n n 
+N CA LEU sing 158 n n 
+N H LEU sing 159 n n 
+N H2 LEU sing 160 n n 
+CA C LEU sing 161 n n 
+CA CB LEU sing 162 n n 
+CA HA LEU sing 163 n n 
+C O LEU doub 164 n n 
+C OXT LEU sing 165 n n 
+CB CG LEU sing 166 n n 
+CB HB2 LEU sing 167 n n 
+CB HB3 LEU sing 168 n n 
+CG CD1 LEU sing 169 n n 
+CG CD2 LEU sing 170 n n 
+CG HG LEU sing 171 n n 
+CD1 HD11 LEU sing 172 n n 
+CD1 HD12 LEU sing 173 n n 
+CD1 HD13 LEU sing 174 n n 
+CD2 HD21 LEU sing 175 n n 
+CD2 HD22 LEU sing 176 n n 
+CD2 HD23 LEU sing 177 n n 
+OXT HXT LEU sing 178 n n 
+N CA LYS sing 179 n n 
+N H LYS sing 180 n n 
+N H2 LYS sing 181 n n 
+CA C LYS sing 182 n n 
+CA CB LYS sing 183 n n 
+CA HA LYS sing 184 n n 
+C O LYS doub 185 n n 
+C OXT LYS sing 186 n n 
+CB CG LYS sing 187 n n 
+CB HB2 LYS sing 188 n n 
+CB HB3 LYS sing 189 n n 
+CG CD LYS sing 190 n n 
+CG HG2 LYS sing 191 n n 
+CG HG3 LYS sing 192 n n 
+CD CE LYS sing 193 n n 
+CD HD2 LYS sing 194 n n 
+CD HD3 LYS sing 195 n n 
+CE NZ LYS sing 196 n n 
+CE HE2 LYS sing 197 n n 
+CE HE3 LYS sing 198 n n 
+NZ HZ1 LYS sing 199 n n 
+NZ HZ2 LYS sing 200 n n 
+NZ HZ3 LYS sing 201 n n 
+OXT HXT LYS sing 202 n n 
+N CA MET sing 203 n n 
+N H MET sing 204 n n 
+N H2 MET sing 205 n n 
+CA C MET sing 206 n n 
+CA CB MET sing 207 n n 
+CA HA MET sing 208 n n 
+C O MET doub 209 n n 
+C OXT MET sing 210 n n 
+CB CG MET sing 211 n n 
+CB HB2 MET sing 212 n n 
+CB HB3 MET sing 213 n n 
+CG SD MET sing 214 n n 
+CG HG2 MET sing 215 n n 
+CG HG3 MET sing 216 n n 
+SD CE MET sing 217 n n 
+CE HE1 MET sing 218 n n 
+CE HE2 MET sing 219 n n 
+CE HE3 MET sing 220 n n 
+OXT HXT MET sing 221 n n 
+N CA PHE sing 222 n n 
+N H PHE sing 223 n n 
+N H2 PHE sing 224 n n 
+CA C PHE sing 225 n n 
+CA CB PHE sing 226 n n 
+CA HA PHE sing 227 n n 
+C O PHE doub 228 n n 
+C OXT PHE sing 229 n n 
+CB CG PHE sing 230 n n 
+CB HB2 PHE sing 231 n n 
+CB HB3 PHE sing 232 n n 
+CG CD1 PHE doub 233 n y 
+CG CD2 PHE sing 234 n y 
+CD1 CE1 PHE sing 235 n y 
+CD1 HD1 PHE sing 236 n n 
+CD2 CE2 PHE doub 237 n y 
+CD2 HD2 PHE sing 238 n n 
+CE1 CZ PHE doub 239 n y 
+CE1 HE1 PHE sing 240 n n 
+CE2 CZ PHE sing 241 n y 
+CE2 HE2 PHE sing 242 n n 
+CZ HZ PHE sing 243 n n 
+OXT HXT PHE sing 244 n n 
+N CA PRO sing 245 n n 
+N CD PRO sing 246 n n 
+N H PRO sing 247 n n 
+CA C PRO sing 248 n n 
+CA CB PRO sing 249 n n 
+CA HA PRO sing 250 n n 
+C O PRO doub 251 n n 
+C OXT PRO sing 252 n n 
+CB CG PRO sing 253 n n 
+CB HB2 PRO sing 254 n n 
+CB HB3 PRO sing 255 n n 
+CG CD PRO sing 256 n n 
+CG HG2 PRO sing 257 n n 
+CG HG3 PRO sing 258 n n 
+CD HD2 PRO sing 259 n n 
+CD HD3 PRO sing 260 n n 
+OXT HXT PRO sing 261 n n 
+N CA SER sing 262 n n 
+N H SER sing 263 n n 
+N H2 SER sing 264 n n 
+CA C SER sing 265 n n 
+CA CB SER sing 266 n n 
+CA HA SER sing 267 n n 
+C O SER doub 268 n n 
+C OXT SER sing 269 n n 
+CB OG SER sing 270 n n 
+CB HB2 SER sing 271 n n 
+CB HB3 SER sing 272 n n 
+OG HG SER sing 273 n n 
+OXT HXT SER sing 274 n n 
+N CA THR sing 275 n n 
+N H THR sing 276 n n 
+N H2 THR sing 277 n n 
+CA C THR sing 278 n n 
+CA CB THR sing 279 n n 
+CA HA THR sing 280 n n 
+C O THR doub 281 n n 
+C OXT THR sing 282 n n 
+CB OG1 THR sing 283 n n 
+CB CG2 THR sing 284 n n 
+CB HB THR sing 285 n n 
+OG1 HG1 THR sing 286 n n 
+CG2 HG21 THR sing 287 n n 
+CG2 HG22 THR sing 288 n n 
+CG2 HG23 THR sing 289 n n 
+OXT HXT THR sing 290 n n 
+N CA TYR sing 291 n n 
+N H TYR sing 292 n n 
+N H2 TYR sing 293 n n 
+CA C TYR sing 294 n n 
+CA CB TYR sing 295 n n 
+CA HA TYR sing 296 n n 
+C O TYR doub 297 n n 
+C OXT TYR sing 298 n n 
+CB CG TYR sing 299 n n 
+CB HB2 TYR sing 300 n n 
+CB HB3 TYR sing 301 n n 
+CG CD1 TYR doub 302 n y 
+CG CD2 TYR sing 303 n y 
+CD1 CE1 TYR sing 304 n y 
+CD1 HD1 TYR sing 305 n n 
+CD2 CE2 TYR doub 306 n y 
+CD2 HD2 TYR sing 307 n n 
+CE1 CZ TYR doub 308 n y 
+CE1 HE1 TYR sing 309 n n 
+CE2 CZ TYR sing 310 n y 
+CE2 HE2 TYR sing 311 n n 
+CZ OH TYR sing 312 n n 
+OH HH TYR sing 313 n n 
+OXT HXT TYR sing 314 n n 
+N CA VAL sing 315 n n 
+N H VAL sing 316 n n 
+N H2 VAL sing 317 n n 
+CA C VAL sing 318 n n 
+CA CB VAL sing 319 n n 
+CA HA VAL sing 320 n n 
+C O VAL doub 321 n n 
+C OXT VAL sing 322 n n 
+CB CG1 VAL sing 323 n n 
+CB CG2 VAL sing 324 n n 
+CB HB VAL sing 325 n n 
+CG1 HG11 VAL sing 326 n n 
+CG1 HG12 VAL sing 327 n n 
+CG1 HG13 VAL sing 328 n n 
+CG2 HG21 VAL sing 329 n n 
+CG2 HG22 VAL sing 330 n n 
+CG2 HG23 VAL sing 331 n n 
+OXT HXT VAL sing 332 n n 
+#
+_atom_sites.entry_id                     2LCL 
+_atom_sites.fract_transf_matrix[1][1]    1 
+_atom_sites.fract_transf_matrix[1][2]    0 
+_atom_sites.fract_transf_matrix[1][3]    0 
+_atom_sites.fract_transf_matrix[2][1]    0 
+_atom_sites.fract_transf_matrix[2][2]    1 
+_atom_sites.fract_transf_matrix[2][3]    0 
+_atom_sites.fract_transf_matrix[3][1]    0 
+_atom_sites.fract_transf_matrix[3][2]    0 
+_atom_sites.fract_transf_matrix[3][3]    1 
+_atom_sites.fract_transf_vector[1]       0 
+_atom_sites.fract_transf_vector[2]       0 
+_atom_sites.fract_transf_vector[3]       0 
+#
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_seq_id
+_atom_site.label_alt_id
+_atom_site.pdbx_PDB_ins_code
+_atom_site.label_asym_id
+_atom_site.label_entity_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+_atom_site.occupancy
+_atom_site.B_iso_or_equiv
+_atom_site.pdbx_formal_charge
+_atom_site.auth_atom_id
+_atom_site.auth_comp_id
+_atom_site.auth_seq_id
+_atom_site.auth_asym_id
+_atom_site.pdbx_PDB_model_num
+ATOM 1 C CA GLY 1 . . A 1 -1.947 11.418 -1.915 1 0 ? CA GLY 97 A 1 
+ATOM 2 C CA ALA 2 . . A 1 -0.002 13.211 -4.673 1 0 ? CA ALA 98 A 1 
+ATOM 3 C CA MET 3 . . A 1 -1.626 12.846 -8.114 1 0 ? CA MET 99 A 1 
+ATOM 4 C CA GLY 4 . . A 1 1.692 11.572 -9.519 1 0 ? CA GLY 100 A 1 
+ATOM 5 C CA PRO 5 . . A 1 2.974 8.12 -8.43 1 0 ? CA PRO 101 A 1 
+ATOM 6 C CA LYS 6 . . A 1 5.82 8.154 -5.877 1 0 ? CA LYS 102 A 1 
+ATOM 7 C CA ASP 7 . . A 1 7.54 5.348 -7.819 1 0 ? CA ASP 103 A 1 
+ATOM 8 C CA ILE 8 . . A 1 6.999 3.175 -10.916 1 0 ? CA ILE 104 A 1 
+ATOM 9 C CA VAL 9 . . A 1 5.173 0.523 -8.855 1 0 ? CA VAL 105 A 1 
+ATOM 10 C CA ASP 10 . . A 1 2.942 1.492 -5.907 1 0 ? CA ASP 106 A 1 
+ATOM 11 C CA PRO 11 . . A 1 2.457 -0.602 -2.725 1 0 ? CA PRO 107 A 1 
+ATOM 12 C CA ALA 12 . . A 1 -0.588 -2.37 -4.216 1 0 ? CA ALA 108 A 1 
+ATOM 13 C CA THR 13 . . A 1 0.561 -5.584 -2.496 1 0 ? CA THR 109 A 1 
+ATOM 14 C CA PRO 14 . . A 1 -1.959 -6.081 0.359 1 0 ? CA PRO 110 A 1 
+ATOM 15 C CA TYR 15 . . A 1 -0.528 -6.655 3.858 1 0 ? CA TYR 111 A 1 
+ATOM 16 C CA PRO 16 . . A 1 -1.119 -9.946 5.747 1 0 ? CA PRO 112 A 1 
+ATOM 17 C CA GLY 17 . . A 1 -4.378 -9.96 7.746 1 0 ? CA GLY 113 A 1 
+ATOM 18 C CA ASP 18 . . A 1 -6.13 -7.5 5.404 1 0 ? CA ASP 114 A 1 
+ATOM 19 C CA LYS 19 . . A 1 -9.629 -8.433 4.182 1 0 ? CA LYS 115 A 1 
+ATOM 20 C CA VAL 20 . . A 1 -9.956 -9.546 0.541 1 0 ? CA VAL 116 A 1 
+ATOM 21 C CA ILE 21 . . A 1 -13.015 -10.134 -1.674 1 0 ? CA ILE 117 A 1 
+ATOM 22 C CA ILE 22 . . A 1 -13.362 -12.734 -4.453 1 0 ? CA ILE 118 A 1 
+ATOM 23 C CA THR 23 . . A 1 -14.893 -11.647 -7.781 1 0 ? CA THR 119 A 1 
+ATOM 24 C CA GLU 24 . . A 1 -14.549 -14.946 -9.679 1 0 ? CA GLU 120 A 1 
+ATOM 25 C CA GLY 25 . . A 1 -15.269 -18.592 -8.79 1 0 ? CA GLY 121 A 1 
+ATOM 26 C CA ALA 26 . . A 1 -18.208 -19.946 -6.758 1 0 ? CA ALA 122 A 1 
+ATOM 27 C CA PHE 27 . . A 1 -16.522 -18.248 -3.779 1 0 ? CA PHE 123 A 1 
+ATOM 28 C CA GLU 28 . . A 1 -17.423 -14.853 -5.284 1 0 ? CA GLU 124 A 1 
+ATOM 29 C CA GLY 29 . . A 1 -18.943 -12.531 -2.656 1 0 ? CA GLY 125 A 1 
+ATOM 30 C CA PHE 30 . . A 1 -16.956 -14.245 0.126 1 0 ? CA PHE 126 A 1 
+ATOM 31 C CA GLN 31 . . A 1 -14.373 -12.319 2.18 1 0 ? CA GLN 127 A 1 
+ATOM 32 C CA ALA 32 . . A 1 -10.96 -13.87 2.921 1 0 ? CA ALA 128 A 1 
+ATOM 33 C CA ILE 33 . . A 1 -7.79 -12.876 4.808 1 0 ? CA ILE 129 A 1 
+ATOM 34 C CA PHE 34 . . A 1 -4.27 -13.087 3.334 1 0 ? CA PHE 130 A 1 
+ATOM 35 C CA THR 35 . . A 1 -2.917 -16.1 5.255 1 0 ? CA THR 131 A 1 
+ATOM 36 C CA GLU 36 . . A 1 0.45 -16.012 3.446 1 0 ? CA GLU 132 A 1 
+ATOM 37 C CA PRO 37 . . A 1 0.951 -15.295 -0.294 1 0 ? CA PRO 133 A 1 
+ATOM 38 C CA ASP 38 . . A 1 3.735 -17.426 -1.821 1 0 ? CA ASP 134 A 1 
+ATOM 39 C CA GLY 39 . . A 1 4.478 -14.535 -4.208 1 0 ? CA GLY 135 A 1 
+ATOM 40 C CA GLU 40 . . A 1 2.985 -11.426 -5.856 1 0 ? CA GLU 136 A 1 
+ATOM 41 C CA ALA 41 . . A 1 1.524 -13.622 -8.621 1 0 ? CA ALA 137 A 1 
+ATOM 42 C CA ARG 42 . . A 1 -0.279 -16.106 -6.344 1 0 ? CA ARG 138 A 1 
+ATOM 43 C CA SER 43 . . A 1 -1.64 -15.408 -2.842 1 0 ? CA SER 139 A 1 
+ATOM 44 C CA MET 44 . . A 1 -3.164 -17.506 -0.033 1 0 ? CA MET 140 A 1 
+ATOM 45 C CA LEU 45 . . A 1 -6.563 -16.34 1.266 1 0 ? CA LEU 141 A 1 
+ATOM 46 C CA LEU 46 . . A 1 -8.728 -17.861 4.024 1 0 ? CA LEU 142 A 1 
+ATOM 47 C CA LEU 47 . . A 1 -12.418 -18.482 3.24 1 0 ? CA LEU 143 A 1 
+ATOM 48 C CA ASN 48 . . A 1 -14.64 -18.447 6.349 1 0 ? CA ASN 144 A 1 
+ATOM 49 C CA LEU 49 . . A 1 -17.599 -20.856 6.106 1 0 ? CA LEU 145 A 1 
+ATOM 50 C CA ILE 50 . . A 1 -20.574 -21.082 8.495 1 0 ? CA ILE 146 A 1 
+ATOM 51 C CA ASN 51 . . A 1 -19.529 -24.733 8.932 1 0 ? CA ASN 147 A 1 
+ATOM 52 C CA LYS 52 . . A 1 -15.788 -24.119 9.424 1 0 ? CA LYS 148 A 1 
+ATOM 53 C CA GLU 53 . . A 1 -12.853 -21.994 8.199 1 0 ? CA GLU 149 A 1 
+ATOM 54 C CA ILE 54 . . A 1 -11.017 -23.279 5.103 1 0 ? CA ILE 150 A 1 
+ATOM 55 C CA LYS 55 . . A 1 -7.714 -22.186 3.521 1 0 ? CA LYS 151 A 1 
+ATOM 56 C CA HIS 56 . . A 1 -7.348 -22.025 -0.281 1 0 ? CA HIS 152 A 1 
+ATOM 57 C CA SER 57 . . A 1 -4.664 -20.545 -2.56 1 0 ? CA SER 153 A 1 
+ATOM 58 C CA VAL 58 . . A 1 -6.164 -18.161 -5.145 1 0 ? CA VAL 154 A 1 
+ATOM 59 C CA LYS 59 . . A 1 -4.456 -16.049 -7.835 1 0 ? CA LYS 155 A 1 
+ATOM 60 C CA ASN 60 . . A 1 -4.522 -12.253 -7.402 1 0 ? CA ASN 156 A 1 
+ATOM 61 C CA THR 61 . . A 1 -6.459 -12.199 -10.695 1 0 ? CA THR 157 A 1 
+ATOM 62 C CA GLU 62 . . A 1 -9.063 -14.666 -9.38 1 0 ? CA GLU 158 A 1 
+ATOM 63 C CA PHE 63 . . A 1 -9.861 -12.314 -6.473 1 0 ? CA PHE 159 A 1 
+ATOM 64 C CA ARG 64 . . A 1 -9.42 -8.608 -5.643 1 0 ? CA ARG 160 A 1 
+ATOM 65 C CA LYS 65 . . A 1 -8.581 -6.624 -2.486 1 0 ? CA LYS 161 A 1 
+ATOM 66 C CA LEU 66 . . A 1 -11.404 -4.724 -0.745 1 0 ? CA LEU 162 A 1 
+#
+_model_server_stats.io_time_ms              0 
+_model_server_stats.parse_time_ms           5 
+_model_server_stats.create_model_time_ms    17 
+_model_server_stats.query_time_ms           172 
+_model_server_stats.encode_time_ms          2 
+_model_server_stats.element_count           66 
+#
